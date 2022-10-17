@@ -5,9 +5,15 @@ function init() {
   const main = document.createElement('main')
   const menuDiv = document.createElement('div')
   const menuTitleDiv = document.createElement('div')
-  const menuHighScoreDisplay = document.createElement('div')
-  const menuCustomControls = document.createElement('div')
-  const menuStartResetButtons = document.createElement('div')
+  const menuHighScoreDisplayDiv = document.createElement('div')
+  const menuCustomControlsDiv = document.createElement('div')
+  const createCustomButton = document.createElement('button')
+  const customWidth = document.createElement('div')
+  const customHeight = document.createElement('div')
+  const customBombs = document.createElement('div')
+  const menuStartResetButtonsDiv = document.createElement('div')
+  const startButton = document.createElement('button')
+  const resetButton = document.createElement('button')
   const gameDisplayDiv = document.createElement('div')
   const gameBorderedDiv = document.createElement('div')
   const gridDiv = document.createElement('div')
@@ -17,9 +23,18 @@ function init() {
   header.classList.add('header')
   menuDiv.classList.add('menu')
   menuTitleDiv.classList.add('menuTitle')
-  menuHighScoreDisplay.classList.add('menuHighScore')
-  menuCustomControls.classList.add('customControls')
-  menuStartResetButtons.classList.add('startResetButtons')
+  menuHighScoreDisplayDiv.classList.add('menuHighScore')
+  menuCustomControlsDiv.classList.add('customControls')
+  createCustomButton.classList.add('createCustomButton')
+  createCustomButton.id = 'customGameStartButton'
+  customWidth.classList.add('customControls')
+  customHeight.classList.add('customControls')
+  customBombs.classList.add('customControls')
+  menuStartResetButtonsDiv.classList.add('startResetButtons')
+  startButton.classList.add('startResetButtons')
+  startButton.id = 'startButton'
+  resetButton.classList.add('startResetButtons')
+  resetButton.id = 'resetButton'
   gameDisplayDiv.classList.add('gameDisplay')
   gameBorderedDiv.classList.add('gameBordered')
   gridDiv.classList.add('grid')
@@ -28,17 +43,13 @@ function init() {
   timerDiv.classList.add('timer')
   body.appendChild(header)
   body.appendChild(main)
-  main.appendChild(menuDiv)
-  menuDiv.appendChild(menuTitleDiv)
-  menuDiv.appendChild(menuHighScoreDisplay)
-  menuDiv.appendChild(menuCustomControls)
-  menuDiv.appendChild(menuStartResetButtons)
-  main.appendChild(gameDisplayDiv)
+  main.append(menuDiv, gameDisplayDiv)
+  menuDiv.append(menuTitleDiv, menuHighScoreDisplayDiv, menuCustomControlsDiv, menuStartResetButtonsDiv)
+  menuCustomControlsDiv.append(createCustomButton, customWidth, customHeight, customBombs)
+  menuStartResetButtonsDiv.append(startButton, resetButton)
   gameDisplayDiv.appendChild(gameBorderedDiv)
-  gameBorderedDiv.appendChild(gameCountersDiv)
-  gameBorderedDiv.appendChild(gridDiv)
-  gameCountersDiv.appendChild(flagCounterDiv)
-  gameCountersDiv.appendChild(timerDiv)
+  gameBorderedDiv.append(gameCountersDiv, gridDiv)
+  gameCountersDiv.append(flagCounterDiv, timerDiv)
   // Element of a grid - saved easy/ medium/ hard variants (custom? - requires more dynamic code with set variants) // Limits on square sizer!!)
 
   // ? Grid Variables
@@ -47,7 +58,7 @@ function init() {
   const bombsNumber = 10
   const cellCount = width * height
   const randomBoard = []
-  // Initally set to 9x9 but will be made dynamic in order to allow for user choice in game difficulty/size
+  // Initally set to 10x10 but will be made dynamic in order to allow for user choice in game difficulty/size
   // Random assignment of bombs through value or class (10 in this example but will be set against hard/medium/easy - next step user input bomb count)
   // Width
   // Object levels of difficulty stored in objects width/height/bombs etc. (function for all game types)

@@ -4,6 +4,28 @@ Explosion on GameOver
 Timer and flag/bomb counter position above game evenly?
 */
 
+body {
+  display: flex;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: green;
+  height: 500px;
+  width: 500px;
+}
+
+.grid div {
+  width: 50px;
+  height: 50px;
+}
+
+.boom {
+  background-color: red;
+}
+
+
 /* Target
 Above but with 'nautical/battleship theme and detailing' similar general design philosophy - fleshed out interactive console with custom game option/ high-score display for each difficulty with name (set Captain: XXX Time on Mission:XXX)
 Cells styled with shadowing/3d effect

@@ -1,7 +1,52 @@
 function init() {
   // ? Create grid
+  const body = document.querySelector('body')
+  const header = document.createElement('header')
+  const main = document.createElement('main')
+  const menuDiv = document.createElement('div')
+  const menuTitleDiv = document.createElement('div')
+  const menuHighScoreDisplay = document.createElement('div')
+  const menuCustomControls = document.createElement('div')
+  const menuStartResetButtons = document.createElement('div')
+  const gameDisplayDiv = document.createElement('div')
+  const gameBorderedDiv = document.createElement('div')
+  const gridDiv = document.createElement('div')
+  const gameCountersDiv = document.createElement('div')
+  const flagCounterDiv = document.createElement('div')
+  const timerDiv = document.createElement('div')
+  header.classList.add('header')
+  menuDiv.classList.add('menu')
+  menuTitleDiv.classList.add('menuTitle')
+  menuHighScoreDisplay.classList.add('menuHighScore')
+  menuCustomControls.classList.add('customControls')
+  menuStartResetButtons.classList.add('startResetButtons')
+  gameDisplayDiv.classList.add('gameDisplay')
+  gameBorderedDiv.classList.add('gameBordered')
+  gridDiv.classList.add('grid')
+  gameCountersDiv.classList.add('gameCounters')
+  flagCounterDiv.classList.add('flagCounter')
+  timerDiv.classList.add('timer')
+  body.appendChild(header)
+  body.appendChild(main)
+  main.appendChild(menuDiv)
+  menuDiv.appendChild(menuTitleDiv)
+  menuDiv.appendChild(menuHighScoreDisplay)
+  menuDiv.appendChild(menuCustomControls)
+  menuDiv.appendChild(menuStartResetButtons)
+  main.appendChild(gameDisplayDiv)
+  gameDisplayDiv.appendChild(gameBorderedDiv)
+  gameBorderedDiv.appendChild(gameCountersDiv)
+  gameBorderedDiv.appendChild(gridDiv)
+  gameCountersDiv.appendChild(flagCounterDiv)
+  gameCountersDiv.appendChild(timerDiv)
   // Element of a grid - saved easy/ medium/ hard variants (custom? - requires more dynamic code with set variants) // Limits on square sizer!!)
+
   // ? Grid Variables
+  const width = 10
+  const height = 10
+  const bombsNumber = 10
+  const cellCount = width * height
+  const randomBoard = []
   // Initally set to 9x9 but will be made dynamic in order to allow for user choice in game difficulty/size
   // Random assignment of bombs through value or class (10 in this example but will be set against hard/medium/easy - next step user input bomb count)
   // Width
@@ -9,9 +54,31 @@ function init() {
   // Height
   // Amount of bombs
   // Each game board (square? newGame?) = []
+
   // ? Character Variables
+
+  function createBoard() {
+    const bombArray = Array(bombsNumber).fill('boom')
+    console.log(bombArray)
+    const safeArray = Array(cellCount - bombsNumber).fill('safe')
+    console.log(safeArray)
+    const shuffledArray = safeArray.concat(bombArray).sort(() => Math.random() - 0.5)
+    console.log(shuffledArray)
+    for (let i = 0; i < width * height; i++) {
+      const cell = document.createElement('div')
+      cell.dataset.index = i
+      cell.innerHTML = i
+      cell.classList.add(shuffledArray[i])
+      gridDiv.appendChild(cell)
+      randomBoard.push(cell)
+    }
+  }
+  createBoard()
   // All cells will be assigned dataset values for reference in later recursive functions when checking neighbours after click events
   // ? Executions
+  function startGame() {
+
+  }
   // Function: create board will run when start button clicked: fill with required amount of bomb/'empty' squares (arrays to store values? Combined? ) - auto board is 'Easy' version - define borders of square to prevent wrapping
   // Function: Assign all non-bomb cells their number value based upon neighbouring bombs, loops? for each direction (8 total corners and sides) then assigning and storing data value (if statements? add to value for each bomb)
   // Function(rightclick): If value = risk apply value = flag if value = flag remove value = flag - will update flag/bomb counter
@@ -42,5 +109,7 @@ function init() {
   // Click event on reset button
   // ++ Click events for custom game options & custom game start (will display in console)
   // ++ Click events on Easy/Medium/Hard auto game select
+  //document.addEventListener('click',)
 }
-document.addEventListener('DOMContentLoaded', init)
+
+window.addEventListener('DOMContentLoaded', init)

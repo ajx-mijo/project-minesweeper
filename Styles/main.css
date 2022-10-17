@@ -4,6 +4,7 @@ Explosion on GameOver
 Timer and flag/bomb counter position above game evenly?
 */
 
+/* Global Styles*/
 body {
   display: flex;
   flex-direction: column;
@@ -17,6 +18,7 @@ main {
   padding: 20px;
 }
 
+/* Menu Console Styles*/
 .menu {
   display: flex;
   flex-direction: column;
@@ -26,9 +28,46 @@ main {
   margin-right: 50px;
 }
 
+.menu div {
+  flex: 1;
+}
+
+.startResetButtons {
+  display: flex;
+}
+
+.startResetButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  width: 60px;
+  height: 30px;
+  background-color: black;
+  color: white;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: white;
+  color: black;
+}
+
+
+
+
+
+
+
+
+/* Game Console Styles */
 .gameDisplay {
   border: 2px solid red;
   padding: 20px;
+  border-radius: 5px;
 }
 
 .gameBordered {
@@ -45,7 +84,7 @@ main {
 .grid {
   display: flex;
   flex-wrap: wrap;
-  background-color: green;
+  background-color: grey;
   height: 500px;
   width: 500px;
 }
@@ -55,9 +94,19 @@ main {
   height: 50px;
 }
 
-.boom {
+.cleared {
+  background-color: white;
+}
+
+.killer {
+  background-color: rgb(78, 18, 18);
+}
+
+.dead {
   background-color: red;
 }
+
+
 
 
 /* Target

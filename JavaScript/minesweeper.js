@@ -12,6 +12,8 @@ function init() {
   const customHeight = document.createElement('div')
   const customBombs = document.createElement('div')
   const menuStartResetButtonsDiv = document.createElement('div')
+  const startButtonDiv = document.createElement('div')
+  const resetButtonDiv = document.createElement('div')
   const startButton = document.createElement('button')
   const resetButton = document.createElement('button')
   const gameDisplayDiv = document.createElement('div')
@@ -31,10 +33,12 @@ function init() {
   customHeight.classList.add('customControls')
   customBombs.classList.add('customControls')
   menuStartResetButtonsDiv.classList.add('startResetButtons')
-  startButton.classList.add('startResetButtons')
+  startButtonDiv.classList.add('startResetButton')
   startButton.id = 'startButton'
-  resetButton.classList.add('startResetButtons')
+  startButton.innerText = 'Start'
+  resetButtonDiv.classList.add('startResetButton')
   resetButton.id = 'resetButton'
+  resetButton.innerText = 'Reset'
   gameDisplayDiv.classList.add('gameDisplay')
   gameBorderedDiv.classList.add('gameBordered')
   gridDiv.classList.add('grid')
@@ -46,7 +50,9 @@ function init() {
   main.append(menuDiv, gameDisplayDiv)
   menuDiv.append(menuTitleDiv, menuHighScoreDisplayDiv, menuCustomControlsDiv, menuStartResetButtonsDiv)
   menuCustomControlsDiv.append(createCustomButton, customWidth, customHeight, customBombs)
-  menuStartResetButtonsDiv.append(startButton, resetButton)
+  menuStartResetButtonsDiv.append(startButtonDiv, resetButtonDiv)
+  resetButtonDiv.appendChild(resetButton)
+  startButtonDiv.appendChild(startButton)
   gameDisplayDiv.appendChild(gameBorderedDiv)
   gameBorderedDiv.append(gameCountersDiv, gridDiv)
   gameCountersDiv.append(flagCounterDiv, timerDiv)
@@ -55,7 +61,7 @@ function init() {
   // ? Grid Variables
   const width = 10
   const height = 10
-  const bombsNumber = 10
+  const bombsNumber = 30
   const cellCount = width * height
   const randomBoard = []
   // Initally set to 10x10 but will be made dynamic in order to allow for user choice in game difficulty/size
@@ -64,34 +70,138 @@ function init() {
   // Object levels of difficulty stored in objects width/height/bombs etc. (function for all game types)
   // Height
   // Amount of bombs
-  // Each game board (square? newGame?) = []
+  // Each game board (newGame?) = []
 
   // ? Character Variables
 
-  function createBoard() {
+  function createNewBoard() {
     const bombArray = Array(bombsNumber).fill('boom')
-    console.log(bombArray)
+    //console.log(bombArray)
     const safeArray = Array(cellCount - bombsNumber).fill('safe')
-    console.log(safeArray)
-    const shuffledArray = safeArray.concat(bombArray).sort(() => Math.random() - 0.5)
-    console.log(shuffledArray)
+    //console.log(safeArray)
+    const randomArray = safeArray.concat(bombArray).sort(() => Math.random() - 0.5)
+    //console.log(randomArray)
     for (let i = 0; i < width * height; i++) {
       const cell = document.createElement('div')
       cell.dataset.index = i
-      cell.innerHTML = i
-      cell.classList.add(shuffledArray[i])
+      //cell.innerHTML = i
+      cell.classList.add(randomArray[i])
       gridDiv.appendChild(cell)
       randomBoard.push(cell)
     }
+    neighbourBombCount()
   }
-  createBoard()
   // All cells will be assigned dataset values for reference in later recursive functions when checking neighbours after click events
+  // Can the bombCount function be made recurisve?
+  function neighbourBombCount() {
+    // Loop through grid, checking each cell
+    for (let i = 0; i < randomBoard.length; i++) {
+      // Define right-edge index 0, one below, modulus === width - 1
+      const rightHandEdge = i % width === width - 1
+      // Define left-edge index 0, next row, one above, modulus === 0
+      const leftHandEdge = i % width === 0
+      // Store number of neighbour bombs for dataset & innerText
+      let scaryNeighbours = 0
+      // Check all possible immediate neighbours of a cell
+      if (randomBoard[i].classList.contains('safe')) {
+        // Left-check
+        if (i > 0 && !leftHandEdge && randomBoard[i - 1].classList.contains('boom')) {
+          scaryNeighbours++
+        }
+        // Top check
+        if (i >= width && randomBoard[i - width].classList.contains('boom')) {
+          scaryNeighbours++
+        }
+        // Right Check
+        if (i > width - 1 && !rightHandEdge && randomBoard[i + 1].classList.contains('boom')) {
+          scaryNeighbours++
+        }
+        // Bottom Check
+        if (i < randomBoard.length - width && randomBoard[i + width].classList.contains('boom')) {
+          scaryNeighbours++
+        }
+        // Top-Left Check
+        if (i > width - 1 && !leftHandEdge && randomBoard[i - width - 1].classList.contains('boom')) {
+          scaryNeighbours++
+        }
+        // Top-Right Check
+        if (i >= width && !rightHandEdge && randomBoard[i - width + 1].classList.contains('boom')) {
+          scaryNeighbours++
+        }
+        // Bottom-Left Check
+        if (i <= randomBoard.length - width && !leftHandEdge && randomBoard[i + width - 1].classList.contains('boom')) {
+          scaryNeighbours++
+        }
+        // Bottom-Right Check
+        if (i < randomBoard.length - width - 1 && !rightHandEdge && randomBoard[i + width + 1].classList.contains('boom')) {
+          scaryNeighbours++
+        }
+        // Store scaryNeighbours as dataset and put as innerText to check
+        randomBoard[i].dataset.nearbyBombs = scaryNeighbours
+        // randomBoard[i].innerText = randomBoard[i].dataset.nearbyBombs
+        //console.log(randomBoard[i])
+      }
+
+      for (let i = 0; i < randomBoard.length; i++) {
+        if (randomBoard[i].dataset.nearbyBombs === '0') {
+          randomBoard[i].classList.remove('safe')
+          randomBoard[i].classList.add('empty')
+          //console.log(randomBoard[i])
+        }
+      }
+    }
+  }
+
+
   // ? Executions
   function startGame() {
-
+    clearBoard()
+    createNewBoard()
   }
-  // Function: create board will run when start button clicked: fill with required amount of bomb/'empty' squares (arrays to store values? Combined? ) - auto board is 'Easy' version - define borders of square to prevent wrapping
-  // Function: Assign all non-bomb cells their number value based upon neighbouring bombs, loops? for each direction (8 total corners and sides) then assigning and storing data value (if statements? add to value for each bomb)
+
+  function clearBoard() {
+    while (gridDiv.firstChild) {
+      gridDiv.removeChild(gridDiv.firstChild)
+    }
+  }
+
+  function leftClickGame(event) {
+    console.log(event.target)
+    if (event.target.classList.contains('safe')) {
+      // if statement to push to gameOverwin?
+      event.target.classList.remove('safe')
+      event.target.classList.add('cleared')
+      event.target.innerText = event.target.dataset.nearbyBombs// revealing number of scaryNeighbours
+    } else if (event.target.classList.contains('cleared')) {
+      return
+    } else if (event.target.classList.contains('flag')) {
+      //if statement to GameOverWin?
+      return
+    } else if (event.target.classList.contains('boom')) {
+      event.target.classList.remove('boom')
+      event.target.classList.add('killer')
+      gameOverLose()
+    } else if (event.target.classList.contains('empty')) {
+      // Call Recursive function
+    }
+    // If contains class 'safe' remove 'safe' class add 'cleared' class - change styling and push nearbyBombs dataset to innerText, return
+    // If contains cleared class, return
+    // If contains flag return
+    // If contains bomb GameOverLose function
+    // If contains 0, recursive function to check neighbours for nearbyBombs dataset values > 0, if = 0 then check their neighbours until > 0 then change class from 'safe' to 'cleared' and push nearbyBombs dataset to innerText
+  }
+
+  function gameOverLose() {
+    for (let i = 0; i < randomBoard.length; i++) {
+      if (randomBoard[i].classList.contains('boom')) {
+        randomBoard[i].classList.remove('boom')
+        randomBoard[i].classList.add('dead')
+      }
+    }
+  }
+
+  // * Function: create board will run when start button clicked: fill with required amount of bomb/'empty' squares (arrays to store values? Combined? ) - auto board is 'Easy' version - define borders of square to prevent wrapping
+  // * Function: Assign all non-bomb cells their number value based upon neighbouring bombs, loops? for each direction (8 total corners and sides) then assigning and storing data value (if statements? add to value for each bomb)
   // Function(rightclick): If value = risk apply value = flag if value = flag remove value = flag - will update flag/bomb counter
   // Function: if 0 value reveal neighbour squares until number square - wll use recurion
   // Function: click reveal - will use check recursion function
@@ -120,7 +230,8 @@ function init() {
   // Click event on reset button
   // ++ Click events for custom game options & custom game start (will display in console)
   // ++ Click events on Easy/Medium/Hard auto game select
-  //document.addEventListener('click',)
+  startButton.addEventListener('click', startGame)
+  gridDiv.addEventListener('click', leftClickGame)
 }
 
 window.addEventListener('DOMContentLoaded', init)

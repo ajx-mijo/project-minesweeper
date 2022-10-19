@@ -61,9 +61,9 @@ main {
 
 .customControlInterface {
   flex: 3;
-  display: flex;
-  flex-wrap: wrap;
   justify-content: space-around;
+  display: flex;
+  align-items: center;
 }
 
 .customControls {
@@ -153,6 +153,7 @@ button:hover {
   grid-template: repeat(9, 1fr) / repeat(9, 1fr);
   place-items: center;
   align-content: center;
+  background-color: rgb(189, 189, 189);
 }
 
 #easy {
@@ -174,10 +175,10 @@ button:hover {
 .gridContainer div {
   width: 20px;
   height: 20px;
-  border: 1px solid green;
+  border: 2px white insert;
+  border: 1px solid greenyellow;
   font-size: 0.8rem;
   text-align: center;
-  background-color: rgb(189, 189, 189);
 }
 
 /* width: 20px;

@@ -1,8 +1,13 @@
 function init() {
   // ? Create grid
+
+  // DOM Elements
+
   const body = document.querySelector('body')
   const header = document.createElement('header')
   const main = document.createElement('main')
+
+  // Menu Console Elements
   const menuDiv = document.createElement('div')
   const menuContents = document.createElement('div')
   const menuHighScoreDisplayDiv = document.createElement('div')
@@ -16,6 +21,8 @@ function init() {
   const resetButtonDiv = document.createElement('div')
   const startButton = document.createElement('button')
   const resetButton = document.createElement('button')
+
+  // Game Display Elements
   const gameDisplayDiv = document.createElement('div')
   const gameBorderedDiv = document.createElement('div')
   const gameInterfaceDiv = document.createElement('div')
@@ -23,6 +30,8 @@ function init() {
   const gameCountersDiv = document.createElement('div')
   const flagCounterDiv = document.createElement('div')
   const timerDiv = document.createElement('div')
+
+  // DOM Element Class/ID/InnerText
   header.classList.add('header')
   header.innerText = 'Minesweeper'
   menuDiv.classList.add('menu')
@@ -44,7 +53,7 @@ function init() {
   menuStartResetButtonsDiv.classList.add('startResetButtons')
   startButtonDiv.classList.add('startResetButton')
   startButton.id = 'startButton'
-  startButton.innerText = 'Start'
+  startButton.innerText = 'Initiate'
   resetButtonDiv.classList.add('startResetButton')
   resetButton.id = 'resetButton'
   resetButton.innerText = 'Reset'
@@ -55,6 +64,8 @@ function init() {
   gameCountersDiv.classList.add('gameCounters')
   flagCounterDiv.classList.add('flagCounter')
   timerDiv.classList.add('timer')
+
+  //DOM Element Structure
   body.appendChild(header)
   body.appendChild(main)
   main.append(menuDiv, gameDisplayDiv)
@@ -68,28 +79,34 @@ function init() {
   gameBorderedDiv.append(gameInterfaceDiv)
   gameInterfaceDiv.append(gameCountersDiv, gridDiv)
   gameCountersDiv.append(flagCounterDiv, timerDiv)
+
+
   // Element of a grid - saved easy/ medium/ hard variants (custom? - requires more dynamic code with set variants) // Limits on square sizer!!)
 
   // ? Grid Variables
-  const easyBoard = {
-    height: 9,
-    width: 9,
-    bombsNumber: 10,
-  }
-  const mediumBoard = {
-    height: 16,
-    width: 16,
-    bombsNumber: 40,
-  }
-  const hardBoard = {
-    height: 16,
-    width: 30,
-    bombsNumber: 99,
-  }
+
+  // Auto Board and Easy/Medium/Hard Boards
   let height = 9
   let width = 9
   let bombsNumber = 10
+
+  const setBoard = {
+    easyHeight: 9,
+    easyWidth: 9,
+    easyBombsNumber: 10,
+    mediumHeight: 16,
+    mediumWidth: 16,
+    mediumBombsNumber: 40,
+    hardHeight: 16,
+    hardWidth: 30,
+    hardBombsNumber: 99,
+  }
+
+  // Random Board Array
   let randomBoard = []
+
+
+
   // Initally set to 10x10 but will be made dynamic in order to allow for user choice in game difficulty/size
   // Random assignment of bombs through value or class (10 in this example but will be set against hard/medium/easy - next step user input bomb count)
   // Width
@@ -98,25 +115,30 @@ function init() {
   // Amount of bombs
   // Each game board (newGame?) = []
 
+
+
   // ? Character Variables
+
+  // Creating Game Boards
+
   function selectBoardDifficulty(event) {
     resetTimer()
     clearBoard()
-    if (event.target.id === 'mediumGameStartButton') {
+    if (event.target.id === 'easyGameStartButton') {
+      gridDiv.setAttribute('id', 'easy')
+      height = setBoard.easyHeight
+      width = setBoard.easyWidth
+      bombsNumber = setBoard.easyBombsNumber
+    } else if (event.target.id === 'mediumGameStartButton') {
       gridDiv.setAttribute('id', 'medium')
-      height = mediumBoard.height
-      width = mediumBoard.width
-      bombsNumber = mediumBoard.bombsNumber
+      height = setBoard.mediumHeight
+      width = setBoard.mediumWidth
+      bombsNumber = setBoard.mediumBombsNumber
     } else if (event.target.id === 'hardGameStartButton') {
       gridDiv.setAttribute('id', 'hard')
-      height = hardBoard.height
-      width = hardBoard.width
-      bombsNumber = hardBoard.bombsNumber
-    } else if (event.target.id === 'easyGameStartButton') {
-      gridDiv.setAttribute('id', 'easy')
-      height = easyBoard.height
-      width = easyBoard.width
-      bombsNumber = easyBoard.bombsNumber
+      height = setBoard.hardHeight
+      width = setBoard.hardWidth
+      bombsNumber = setBoard.hardBombsNumber
     }
     startTimer()
     flagCounter()
@@ -164,7 +186,7 @@ function init() {
           scaryNeighbours++
         }
         // Right Check
-        if (i > width - 1 && !rightEdge && randomBoard[i + 1].classList.contains('boom')) {
+        if (i < width - 1 && !rightEdge && randomBoard[i + 1].classList.contains('boom')) {
           scaryNeighbours++
         }
         // Bottom Check
@@ -189,8 +211,6 @@ function init() {
         }
         // Store scaryNeighbours as dataset and put as innerText to check
         randomBoard[i].dataset.nearbyBombs = scaryNeighbours
-        // randomBoard[i].innerText = randomBoard[i].dataset.nearbyBombs
-        //console.log(randomBoard[i])
       }
 
       for (let i = 0; i < randomBoard.length; i++) {
@@ -203,12 +223,13 @@ function init() {
     }
   }
 
+
   // ? Variables
 
   let timerScreen = document.querySelector('.timer')
   timerScreen.innerText = 0
   let sec = 0
-  let flagCounterScreen = document.querySelector('.flagCounter')
+  const flagCounterScreen = document.querySelector('.flagCounter')
 
 
   // ? Executions
@@ -336,6 +357,8 @@ function init() {
   // Click event on reset button
   // ++ Click events for custom game options & custom game start (will display in console)
   // ++ Click events on Easy/Medium/Hard auto game select
+
+  // Event Listeners
   startButton.addEventListener('click', startGame)
   resetButton.addEventListener('click', resetBoard)
   easyButton.addEventListener('click', selectBoardDifficulty)

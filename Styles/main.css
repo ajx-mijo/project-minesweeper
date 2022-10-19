@@ -9,6 +9,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: 'Abril Fatface', sans-serif;
+  font-size: 48px;
 }
 
 main {
@@ -16,24 +18,60 @@ main {
   border: 2px solid black;
   border-radius: 5px;
   padding: 20px;
+  background-color: rgb(130, 130, 141);
+}
+
+.header {
+  margin-bottom: 20px;
+  font-size: 1.8em;
 }
 
 /* Menu Console Styles*/
 .menu {
   display: flex;
   flex-direction: column;
-  border: 2px solid red;
   border-radius: 5px;
   width: 300px;
   margin-right: 50px;
 }
 
 .menu div {
+  border: 2px solid red;
+  padding: 10px;
+}
+
+.menuTitle {
+  font-size: 2.4rem;
+  text-align: center;
+  max-height: 135px;
   flex: 1;
+  margin: 10px;
+}
+
+.menuContents {
+  display: flex;
+  flex-direction: column;
+  flex: 8.5;
+}
+
+.menuHighScore {
+  flex: 3;
+}
+
+.customControlInterface {
+  flex: 3;
+  display: flex;
+}
+
+.customControls {
+  display: flex;
+  flex: 3;
 }
 
 .startResetButtons {
   display: flex;
+  justify-content: space-around;
+  flex: 1;
 }
 
 .startResetButton {
@@ -78,13 +116,18 @@ button:hover {
 .gameCounters {
   height: 30px;
   border: 2px solid black;
-  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1rem;
 }
 
 .grid {
   display: flex;
   flex-wrap: wrap;
-  background-color: grey;
+  background-image: url(../Images/radar-gif.gif);
+  /* background-color: grey; */
+  background-repeat: no-repeat;
+  background-size: 100%;
   height: 500px;
   width: 500px;
 }
@@ -106,6 +149,10 @@ button:hover {
   background-color: red;
 }
 
+#flag::before {
+  content: "\02693";
+}
+
 
 
 
@@ -114,4 +161,5 @@ Above but with 'nautical/battleship theme and detailing' similar general design 
 Cells styled with shadowing/3d effect
 Sound design, nautical greetings, explosion, good job when you when (tally ho etc.)
 Responsive design to push and simplify interactive menu/console to E/M/H above game
+Green neon radar design - with red neon high/score custom etc or grey with white flicker type counters
 */

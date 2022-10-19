@@ -5,6 +5,7 @@ function init() {
   const main = document.createElement('main')
   const menuDiv = document.createElement('div')
   const menuTitleDiv = document.createElement('div')
+  const menuContents = document.createElement('div')
   const menuHighScoreDisplayDiv = document.createElement('div')
   const menuCustomControlsDiv = document.createElement('div')
   const createCustomButton = document.createElement('button')
@@ -23,10 +24,13 @@ function init() {
   const flagCounterDiv = document.createElement('div')
   const timerDiv = document.createElement('div')
   header.classList.add('header')
+  header.innerText = 'Minesweeper'
   menuDiv.classList.add('menu')
+  menuContents.classList.add('menuContents')
   menuTitleDiv.classList.add('menuTitle')
+  menuTitleDiv.innerText = 'Minesweeper'
   menuHighScoreDisplayDiv.classList.add('menuHighScore')
-  menuCustomControlsDiv.classList.add('customControls')
+  menuCustomControlsDiv.classList.add('customControlInterface')
   createCustomButton.classList.add('createCustomButton')
   createCustomButton.id = 'customGameStartButton'
   customWidth.classList.add('customControls')
@@ -48,7 +52,8 @@ function init() {
   body.appendChild(header)
   body.appendChild(main)
   main.append(menuDiv, gameDisplayDiv)
-  menuDiv.append(menuTitleDiv, menuHighScoreDisplayDiv, menuCustomControlsDiv, menuStartResetButtonsDiv)
+  menuDiv.append(menuTitleDiv, menuContents)
+  menuContents.append(menuHighScoreDisplayDiv, menuCustomControlsDiv, menuStartResetButtonsDiv)
   menuCustomControlsDiv.append(createCustomButton, customWidth, customHeight, customBombs)
   menuStartResetButtonsDiv.append(startButtonDiv, resetButtonDiv)
   resetButtonDiv.appendChild(resetButton)
@@ -97,15 +102,15 @@ function init() {
     // Loop through grid, checking each cell
     for (let i = 0; i < randomBoard.length; i++) {
       // Define right-edge index 0, one below, modulus === width - 1
-      const rightHandEdge = i % width === width - 1
+      const rightEdge = i % width === width - 1
       // Define left-edge index 0, next row, one above, modulus === 0
-      const leftHandEdge = i % width === 0
+      const leftEdge = i % width === 0
       // Store number of neighbour bombs for dataset & innerText
       let scaryNeighbours = 0
       // Check all possible immediate neighbours of a cell
       if (randomBoard[i].classList.contains('safe')) {
         // Left-check
-        if (i > 0 && !leftHandEdge && randomBoard[i - 1].classList.contains('boom')) {
+        if (i > 0 && !leftEdge && randomBoard[i - 1].classList.contains('boom')) {
           scaryNeighbours++
         }
         // Top check
@@ -113,7 +118,7 @@ function init() {
           scaryNeighbours++
         }
         // Right Check
-        if (i > width - 1 && !rightHandEdge && randomBoard[i + 1].classList.contains('boom')) {
+        if (i > width - 1 && !rightEdge && randomBoard[i + 1].classList.contains('boom')) {
           scaryNeighbours++
         }
         // Bottom Check
@@ -121,19 +126,19 @@ function init() {
           scaryNeighbours++
         }
         // Top-Left Check
-        if (i > width - 1 && !leftHandEdge && randomBoard[i - width - 1].classList.contains('boom')) {
+        if (i > width - 1 && !leftEdge && randomBoard[i - width - 1].classList.contains('boom')) {
           scaryNeighbours++
         }
         // Top-Right Check
-        if (i >= width && !rightHandEdge && randomBoard[i - width + 1].classList.contains('boom')) {
+        if (i >= width && !rightEdge && randomBoard[i - width + 1].classList.contains('boom')) {
           scaryNeighbours++
         }
         // Bottom-Left Check
-        if (i <= randomBoard.length - width && !leftHandEdge && randomBoard[i + width - 1].classList.contains('boom')) {
+        if (i <= randomBoard.length - width && !leftEdge && randomBoard[i + width - 1].classList.contains('boom')) {
           scaryNeighbours++
         }
         // Bottom-Right Check
-        if (i < randomBoard.length - width - 1 && !rightHandEdge && randomBoard[i + width + 1].classList.contains('boom')) {
+        if (i < randomBoard.length - width - 1 && !rightEdge && randomBoard[i + width + 1].classList.contains('boom')) {
           scaryNeighbours++
         }
         // Store scaryNeighbours as dataset and put as innerText to check
@@ -152,11 +157,29 @@ function init() {
     }
   }
 
+  // ? Variables
+
+  let timerScreen = document.querySelector('.timer')
+  timerScreen.innerText = 0
+  let sec = 0
+  let flagCounterScreen = document.querySelector('.flagCounter')
+
 
   // ? Executions
   function startGame() {
+    resetTimer()
     clearBoard()
     createNewBoard()
+    flagCounter()
+    startTimer()
+  }
+
+  function resetBoard() {
+    resetTimer()
+    clearBoard()
+    createNewBoard()
+    flagCounter()
+    startTimer()
   }
 
   function clearBoard() {
@@ -165,8 +188,36 @@ function init() {
     }
   }
 
+
+  function startTimer() {
+    timerScreen = setInterval(() => {
+      sec += 1
+      timerDiv.innerText = sec
+      if (sec === 0) {
+        clearInterval(timerScreen)
+      }
+    }, 1000)
+    // if gameover pause startcountdown// global let gameOver = true/false statement then setTimeout
+  }
+
+  function resetTimer() {
+    clearInterval(timerScreen)
+    sec = 0
+    timerScreen.innerText = 0
+  }
+
+  function flagCounter() {
+    flagCounterScreen.innerText = bombsNumber
+  }
+
+  function plantFlag(event) {
+    event.target.setAttribute('id', 'flag')
+    flagCounterScreen.innerText -= 1
+  }
+
   function leftClickGame(event) {
-    console.log(event.target)
+    console.log(event)
+    //check game over first to disable click on grid function
     if (event.target.classList.contains('safe')) {
       // if statement to push to gameOverwin?
       event.target.classList.remove('safe')
@@ -183,6 +234,7 @@ function init() {
       gameOverLose()
     } else if (event.target.classList.contains('empty')) {
       // Call Recursive function
+      //zeroNumberHunt(event)
     }
     // If contains class 'safe' remove 'safe' class add 'cleared' class - change styling and push nearbyBombs dataset to innerText, return
     // If contains cleared class, return
@@ -190,6 +242,15 @@ function init() {
     // If contains bomb GameOverLose function
     // If contains 0, recursive function to check neighbours for nearbyBombs dataset values > 0, if = 0 then check their neighbours until > 0 then change class from 'safe' to 'cleared' and push nearbyBombs dataset to innerText
   }
+
+  //function zeroNumberHunt(event) {
+  // Run result back into leftclickfunction to close loop as will return the correct outcome (i.e. change class and display number or display nothing)
+  //if (cell contains 'safe' class) {
+  //  change to cleared value 
+  // push dataset.nearbyBombs to innerText
+  //}
+  // check dataset values in eight directions if zero in one direction check dataset values in eight directions(! - send it backwards?)
+  //}
 
   function gameOverLose() {
     for (let i = 0; i < randomBoard.length; i++) {
@@ -231,7 +292,12 @@ function init() {
   // ++ Click events for custom game options & custom game start (will display in console)
   // ++ Click events on Easy/Medium/Hard auto game select
   startButton.addEventListener('click', startGame)
+  resetButton.addEventListener('click', resetBoard)
   gridDiv.addEventListener('click', leftClickGame)
+  gameDisplayDiv.addEventListener('contextmenu', function (event) {
+    plantFlag(event)
+    event.preventDefault()
+  }, false)
 }
 
 window.addEventListener('DOMContentLoaded', init)

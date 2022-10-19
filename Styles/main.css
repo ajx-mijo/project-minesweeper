@@ -25,6 +25,8 @@ body {
 main {
   display: flex;
   flex-direction: column-reverse;
+  background-image: url(../Images/rivet\ 2.jpeg);
+  background-size: cover;
   border: 2px solid black;
   border-radius: 5px;
   padding: 50px;

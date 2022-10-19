@@ -86,9 +86,9 @@ function init() {
   // ? Grid Variables
 
   // Auto Board and Easy/Medium/Hard Boards
-  let height = 9
-  let width = 9
-  let bombsNumber = 10
+  let height
+  let width
+  let bombsNumber
 
   const setBoard = {
     easyHeight: 9,
@@ -145,6 +145,13 @@ function init() {
     createNewBoard()
   }
 
+  function simpleStart() {
+    width = 9
+    height = 9
+    bombsNumber = 10
+    createNewBoard()
+  }
+
   function createNewBoard() {
     const bombArray = Array(bombsNumber).fill('boom')
     //console.log(bombArray)
@@ -186,7 +193,7 @@ function init() {
           scaryNeighbours++
         }
         // Right Check
-        if (i < width - 1 && !rightEdge && randomBoard[i + 1].classList.contains('boom')) {
+        if (i <= randomBoard.length && !rightEdge && randomBoard[i + 1].classList.contains('boom')) {
           scaryNeighbours++
         }
         // Bottom Check
@@ -236,7 +243,7 @@ function init() {
   function startGame() {
     resetTimer()
     clearBoard()
-    createNewBoard()
+    simpleStart()
     flagCounter()
     startTimer()
   }
@@ -250,7 +257,7 @@ function init() {
   }
 
   function clearBoard() {
-    // randomBoard.splice(0, randomBoard.length)
+    randomBoard.splice(0, randomBoard.length)
     gridDiv.innerHTML = ''
     // while (gridDiv.firstChild) {
     //   gridDiv.removeChild(gridDiv.firstChild)

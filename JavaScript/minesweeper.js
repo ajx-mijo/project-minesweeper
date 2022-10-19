@@ -4,14 +4,13 @@ function init() {
   const header = document.createElement('header')
   const main = document.createElement('main')
   const menuDiv = document.createElement('div')
-  const menuTitleDiv = document.createElement('div')
   const menuContents = document.createElement('div')
   const menuHighScoreDisplayDiv = document.createElement('div')
   const menuCustomControlsDiv = document.createElement('div')
-  const createCustomButton = document.createElement('button')
-  const customWidth = document.createElement('div')
-  const customHeight = document.createElement('div')
-  const customBombs = document.createElement('div')
+  const customButton = document.createElement('button')
+  const easyButton = document.createElement('button')
+  const mediumButton = document.createElement('button')
+  const hardButton = document.createElement('button')
   const menuStartResetButtonsDiv = document.createElement('div')
   const startButtonDiv = document.createElement('div')
   const resetButtonDiv = document.createElement('div')
@@ -19,6 +18,7 @@ function init() {
   const resetButton = document.createElement('button')
   const gameDisplayDiv = document.createElement('div')
   const gameBorderedDiv = document.createElement('div')
+  const gameInterfaceDiv = document.createElement('div')
   const gridDiv = document.createElement('div')
   const gameCountersDiv = document.createElement('div')
   const flagCounterDiv = document.createElement('div')
@@ -27,15 +27,20 @@ function init() {
   header.innerText = 'Minesweeper'
   menuDiv.classList.add('menu')
   menuContents.classList.add('menuContents')
-  menuTitleDiv.classList.add('menuTitle')
-  menuTitleDiv.innerText = 'Minesweeper'
   menuHighScoreDisplayDiv.classList.add('menuHighScore')
   menuCustomControlsDiv.classList.add('customControlInterface')
-  createCustomButton.classList.add('createCustomButton')
-  createCustomButton.id = 'customGameStartButton'
-  customWidth.classList.add('customControls')
-  customHeight.classList.add('customControls')
-  customBombs.classList.add('customControls')
+  customButton.classList.add('createButton')
+  customButton.innerText = 'Custom'
+  customButton.id = 'customGameStartButton'
+  easyButton.classList.add('createButton')
+  easyButton.innerText = 'Easy'
+  easyButton.id = 'easyGameStartButton'
+  mediumButton.classList.add('createButton')
+  mediumButton.innerText = 'Medium'
+  mediumButton.id = 'mediumGameStartButton'
+  hardButton.classList.add('createButton')
+  hardButton.innerText = 'Hard'
+  hardButton.id = 'hardGameStartButton'
   menuStartResetButtonsDiv.classList.add('startResetButtons')
   startButtonDiv.classList.add('startResetButton')
   startButton.id = 'startButton'
@@ -44,31 +49,47 @@ function init() {
   resetButton.id = 'resetButton'
   resetButton.innerText = 'Reset'
   gameDisplayDiv.classList.add('gameDisplay')
+  gameInterfaceDiv.classList.add('gameInterface')
   gameBorderedDiv.classList.add('gameBordered')
-  gridDiv.classList.add('grid')
+  gridDiv.classList.add('gridContainer')
   gameCountersDiv.classList.add('gameCounters')
   flagCounterDiv.classList.add('flagCounter')
   timerDiv.classList.add('timer')
   body.appendChild(header)
   body.appendChild(main)
   main.append(menuDiv, gameDisplayDiv)
-  menuDiv.append(menuTitleDiv, menuContents)
+  menuDiv.appendChild(menuContents)
   menuContents.append(menuHighScoreDisplayDiv, menuCustomControlsDiv, menuStartResetButtonsDiv)
-  menuCustomControlsDiv.append(createCustomButton, customWidth, customHeight, customBombs)
+  menuCustomControlsDiv.append(customButton, easyButton, mediumButton, hardButton)
   menuStartResetButtonsDiv.append(startButtonDiv, resetButtonDiv)
   resetButtonDiv.appendChild(resetButton)
   startButtonDiv.appendChild(startButton)
   gameDisplayDiv.appendChild(gameBorderedDiv)
-  gameBorderedDiv.append(gameCountersDiv, gridDiv)
+  gameBorderedDiv.append(gameInterfaceDiv)
+  gameInterfaceDiv.append(gameCountersDiv, gridDiv)
   gameCountersDiv.append(flagCounterDiv, timerDiv)
   // Element of a grid - saved easy/ medium/ hard variants (custom? - requires more dynamic code with set variants) // Limits on square sizer!!)
 
   // ? Grid Variables
-  const width = 10
-  const height = 10
-  const bombsNumber = 30
-  const cellCount = width * height
-  const randomBoard = []
+  const easyBoard = {
+    height: 9,
+    width: 9,
+    bombsNumber: 10,
+  }
+  const mediumBoard = {
+    height: 16,
+    width: 16,
+    bombsNumber: 40,
+  }
+  const hardBoard = {
+    height: 16,
+    width: 30,
+    bombsNumber: 99,
+  }
+  let height = 9
+  let width = 9
+  let bombsNumber = 10
+  let randomBoard = []
   // Initally set to 10x10 but will be made dynamic in order to allow for user choice in game difficulty/size
   // Random assignment of bombs through value or class (10 in this example but will be set against hard/medium/easy - next step user input bomb count)
   // Width
@@ -78,11 +99,34 @@ function init() {
   // Each game board (newGame?) = []
 
   // ? Character Variables
+  function selectBoardDifficulty(event) {
+    resetTimer()
+    clearBoard()
+    if (event.target.id === 'mediumGameStartButton') {
+      gridDiv.setAttribute('id', 'medium')
+      height = mediumBoard.height
+      width = mediumBoard.width
+      bombsNumber = mediumBoard.bombsNumber
+    } else if (event.target.id === 'hardGameStartButton') {
+      gridDiv.setAttribute('id', 'hard')
+      height = hardBoard.height
+      width = hardBoard.width
+      bombsNumber = hardBoard.bombsNumber
+    } else if (event.target.id === 'easyGameStartButton') {
+      gridDiv.setAttribute('id', 'easy')
+      height = easyBoard.height
+      width = easyBoard.width
+      bombsNumber = easyBoard.bombsNumber
+    }
+    startTimer()
+    flagCounter()
+    createNewBoard()
+  }
 
   function createNewBoard() {
     const bombArray = Array(bombsNumber).fill('boom')
     //console.log(bombArray)
-    const safeArray = Array(cellCount - bombsNumber).fill('safe')
+    const safeArray = Array(width * height - bombsNumber).fill('safe')
     //console.log(safeArray)
     const randomArray = safeArray.concat(bombArray).sort(() => Math.random() - 0.5)
     //console.log(randomArray)
@@ -95,6 +139,8 @@ function init() {
       randomBoard.push(cell)
     }
     neighbourBombCount()
+    document.querySelector('.gameCounters').style.display = 'flex'
+    document.querySelector('.gameBordered').style.display = 'grid'
   }
   // All cells will be assigned dataset values for reference in later recursive functions when checking neighbours after click events
   // Can the bombCount function be made recurisve?
@@ -183,9 +229,11 @@ function init() {
   }
 
   function clearBoard() {
-    while (gridDiv.firstChild) {
-      gridDiv.removeChild(gridDiv.firstChild)
-    }
+    // randomBoard.splice(0, randomBoard.length)
+    gridDiv.innerHTML = ''
+    // while (gridDiv.firstChild) {
+    //   gridDiv.removeChild(gridDiv.firstChild)
+    // }
   }
 
 
@@ -193,9 +241,6 @@ function init() {
     timerScreen = setInterval(() => {
       sec += 1
       timerDiv.innerText = sec
-      if (sec === 0) {
-        clearInterval(timerScreen)
-      }
     }, 1000)
     // if gameover pause startcountdown// global let gameOver = true/false statement then setTimeout
   }
@@ -216,7 +261,7 @@ function init() {
   }
 
   function leftClickGame(event) {
-    console.log(event)
+    console.log(event.target)
     //check game over first to disable click on grid function
     if (event.target.classList.contains('safe')) {
       // if statement to push to gameOverwin?
@@ -293,8 +338,12 @@ function init() {
   // ++ Click events on Easy/Medium/Hard auto game select
   startButton.addEventListener('click', startGame)
   resetButton.addEventListener('click', resetBoard)
+  easyButton.addEventListener('click', selectBoardDifficulty)
+  mediumButton.addEventListener('click', selectBoardDifficulty)
+  hardButton.addEventListener('click', selectBoardDifficulty)
+  // customButton.addEventListener('click')
   gridDiv.addEventListener('click', leftClickGame)
-  gameDisplayDiv.addEventListener('contextmenu', function (event) {
+  gridDiv.addEventListener('contextmenu', function (event) {
     plantFlag(event)
     event.preventDefault()
   }, false)

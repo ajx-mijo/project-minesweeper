@@ -5,62 +5,65 @@ Timer and flag/bomb counter position above game evenly?
 */
 
 /* Global Styles*/
+
+html {
+  background: url(../Images/Stormysea.gif) no-repeat center center fixed;
+  background-size: cover;
+}
+
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: 'Abril Fatface', sans-serif;
   font-size: 48px;
+  /* background-image: url(../Images/Stormysea.gif);
+  background-repeat: no-repeat;
+  background-size: 100%; */
 }
 
 main {
   display: flex;
+  flex-direction: column-reverse;
   border: 2px solid black;
   border-radius: 5px;
-  padding: 20px;
+  padding: 50px;
   background-color: rgb(130, 130, 141);
 }
 
 .header {
   margin-bottom: 20px;
   font-size: 1.8em;
+  color: goldenrod;
 }
 
 /* Menu Console Styles*/
 .menu {
-  display: flex;
-  flex-direction: column;
-  border-radius: 5px;
-  width: 300px;
-  margin-right: 50px;
+  display: block;
+  flex: 2;
 }
 
 .menu div {
-  border: 2px solid red;
+  border: 2px solid black;
   padding: 10px;
 }
 
-.menuTitle {
-  font-size: 2.4rem;
-  text-align: center;
-  max-height: 135px;
-  flex: 1;
-  margin: 10px;
-}
+
 
 .menuContents {
   display: flex;
-  flex-direction: column;
-  flex: 8.5;
+  margin-top: 20px;
 }
 
 .menuHighScore {
-  flex: 3;
+  flex: 2;
 }
 
 .customControlInterface {
   flex: 3;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .customControls {
@@ -103,40 +106,88 @@ button:hover {
 
 /* Game Console Styles */
 .gameDisplay {
-  border: 2px solid red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
   padding: 20px;
   border-radius: 5px;
+  min-width: 720px;
+  min-height: 460px;
+  background-image: url(../Images/backgroundBattleship.jpeg);
+  background-position: center;
+  background-size: 120%;
+  background-repeat: no-repeat;
+  flex: 7;
 }
 
 .gameBordered {
+  display: none;
+  flex-direction: column;
+}
+
+.gameInterface {
+  border: 2px solid black;
   display: flex;
   flex-direction: column;
+  width: max-content;
+  /* background-image: url(../Images/radar-gif.gif); 
+  background-repeat: no-repeat;
+  background-size: 100%;*/
 }
 
 .gameCounters {
   height: 30px;
   border: 2px solid black;
-  display: flex;
+  background-color: black;
+  display: none;
   justify-content: space-evenly;
-  font-size: 1rem;
+  font-size: 0.5rem;
+  color: greenyellow;
+  font-family: 'Orbitron'
 }
 
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  background-image: url(../Images/radar-gif.gif);
-  /* background-color: grey; */
-  background-repeat: no-repeat;
-  background-size: 100%;
-  height: 500px;
-  width: 500px;
+
+.gridContainer {
+  display: grid;
+  grid-template: repeat(9, 1fr) / repeat(9, 1fr);
+  place-items: center;
+  align-content: center;
 }
 
-.grid div {
-  width: 50px;
-  height: 50px;
+#easy {
+  display: grid;
+  grid-template: repeat(9, 1fr) / repeat(9, 1fr);
 }
 
+#medium {
+  display: grid;
+  grid-template: repeat(16, 1fr) / repeat(16, 1fr);
+}
+
+#hard {
+  display: grid;
+  grid-template: repeat(16, 1fr) / repeat(30, 1fr);
+}
+
+
+.gridContainer div {
+  width: 20px;
+  height: 20px;
+  border: 1px solid green;
+  font-size: 0.8rem;
+  text-align: center;
+  background-color: rgb(189, 189, 189);
+}
+
+/* width: 20px;
+height: 20px;
+border-right: 1px solid rgb(123, 123, 123);
+border-bottom: 1px solid rgb(123, 123, 123);
+font-size: 0.8rem;
+text-align: center;
+background-color: rgb(189, 189, 189);
+border: 1px white inset */
 .cleared {
   background-color: white;
 }

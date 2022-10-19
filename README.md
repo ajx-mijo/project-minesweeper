@@ -19,3 +19,6 @@ I focussed first on the 'left-click' event when a user uncovers a cell, accounti
 I then created a timer display to be initialized when the game was started/reset/ or a custom game was generated
 
 I then created a simple bomb /flag counter which was set to the bomb amount and was reduced by 1 after every flag(anchor) was placed by the player on the grid
+
+
+Challenge - disable right click menu pop-up (on game), disable right-click on game before game init

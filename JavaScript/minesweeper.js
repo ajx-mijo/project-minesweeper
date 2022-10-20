@@ -86,9 +86,9 @@ function init() {
   // ? Grid Variables
 
   // Auto Board and Easy/Medium/Hard Boards
-  let height
-  let width
-  let bombsNumber
+  let height = 9
+  let width = 9
+  let bombsNumber = 10
 
   const setBoard = {
     easyHeight: 9,
@@ -104,16 +104,6 @@ function init() {
 
   // Random Board Array
   let randomBoard = []
-
-
-
-  // Initally set to 10x10 but will be made dynamic in order to allow for user choice in game difficulty/size
-  // Random assignment of bombs through value or class (10 in this example but will be set against hard/medium/easy - next step user input bomb count)
-  // Width
-  // Object levels of difficulty stored in objects width/height/bombs etc. (function for all game types)
-  // Height
-  // Amount of bombs
-  // Each game board (newGame?) = []
 
 
 
@@ -145,32 +135,22 @@ function init() {
     createNewBoard()
   }
 
-  function simpleStart() {
-    width = 9
-    height = 9
-    bombsNumber = 10
-    createNewBoard()
-  }
 
   function createNewBoard() {
-    const bombArray = Array(bombsNumber).fill('boom')
-    //console.log(bombArray)
-    const safeArray = Array(width * height - bombsNumber).fill('safe')
-    //console.log(safeArray)
-    const randomArray = safeArray.concat(bombArray).sort(() => Math.random() - 0.5)
-    //console.log(randomArray)
+    const randomArray = Array(width * height - bombsNumber).fill('safe').concat(Array(bombsNumber).fill('boom')).sort(() => Math.random() - 0.5)
     for (let i = 0; i < width * height; i++) {
-      const cell = document.createElement('div')
+      const cell = document.createElement('cell')
       cell.dataset.index = i
-      //cell.innerHTML = i
       cell.classList.add(randomArray[i])
       gridDiv.appendChild(cell)
       randomBoard.push(cell)
+      cell.addEventListener('click', leftClickGame)
     }
     neighbourBombCount()
     document.querySelector('.gameCounters').style.display = 'flex'
     document.querySelector('.gameBordered').style.display = 'grid'
   }
+
   // All cells will be assigned dataset values for reference in later recursive functions when checking neighbours after click events
   // Can the bombCount function be made recurisve?
   function neighbourBombCount() {
@@ -216,20 +196,79 @@ function init() {
         if (i < randomBoard.length - width - 1 && !rightEdge && randomBoard[i + width + 1].classList.contains('boom')) {
           scaryNeighbours++
         }
-        // Store scaryNeighbours as dataset and put as innerText to check
         randomBoard[i].dataset.nearbyBombs = scaryNeighbours
       }
-
       for (let i = 0; i < randomBoard.length; i++) {
         if (randomBoard[i].dataset.nearbyBombs === '0') {
           randomBoard[i].classList.remove('safe')
           randomBoard[i].classList.add('empty')
-          //console.log(randomBoard[i])
         }
       }
     }
   }
 
+  function leftClickGame(event) {
+    console.log(event.target)
+    const targetCell = event.target
+    //check game over first to disable click on grid function
+    const cellIndex = targetCell.dataset.index
+    if (targetCell.classList.contains('safe')) {
+      // if statement to push to gameOverwin?
+      targetCell.classList.remove('safe')
+      targetCell.classList.add('cleared')
+      targetCell.innerText = targetCell.dataset.nearbyBombs// revealing number of scaryNeighbours
+    } else if (targetCell.classList.contains('cleared')) {
+      return
+    } else if (targetCell.classList.contains('flag')) {
+      //if statement to GameOverWin?
+      //check progress each time
+      return
+    } else if (targetCell.classList.contains('boom')) {
+      targetCell.classList.remove('boom')
+      targetCell.classList.add('killer')
+      gameOverLose()
+    } else {
+      // Call Recursive function
+      checkNeighbours(targetCell, cellIndex)
+      targetCell.classList.add('cleared')
+    }
+    // If contains class 'safe' remove 'safe' class add 'cleared' class - change styling and push nearbyBombs dataset to innerText, return
+    // If contains cleared class, return
+    // If contains flag return
+    // If contains bomb GameOverLose function
+    // If contains 0, recursive function to check neighbours for nearbyBombs dataset values > 0, if = 0 then check their neighbours until > 0 then change class from 'safe' to 'cleared' and push nearbyBombs dataset to innerText
+  }
+
+  // //? Recursive function 
+  function checkNeighbours(targetCell, cellIndex) {
+    const neighbours = findAllNeighbours(targetCell)// should be an array so can forEach
+    neighbours.forEach(neighbour => {
+      if (neighbour.classList.contains('empty')) {
+        neighbour.classList.remove('empty')
+        neighbour.classList.add('cleared')
+        checkNeighbours(neighbour)
+      } else if (neighbour.contains.class('bomb')) {
+        return
+      } else if (neighbour.classList.contains('safe')) {
+        targetCell.classList.remove('safe')
+        targetCell.classList.add('cleared')
+        targetCell.innerText = targetCell.dataset.nearbyBombs
+      }
+    })
+  }
+
+  function findAllNeighbours(targetCell) {
+    console.log(targetCell)
+    let neighbourHoodArray
+    if (randomBoard[targetCell.dataset.index] % width === width - 1) {
+      neighbourHoodArray = [randomBoard[targetCell.dataset.index] + width, randomBoard[targetCell.dataset.index] - width, randomBoard[targetCell.dataset.index] + width - 1, randomBoard[targetCell.dataset.index] - width - 1, randomBoard[targetCell.dataset.index] - 1]
+    } else if (randomBoard[targetCell.dataset.index] % width === 0) {
+      neighbourHoodArray = [randomBoard[targetCell.dataset.index] + width, randomBoard[targetCell.dataset.index] + width + 1, randomBoard[targetCell.dataset.index] + 1, randomBoard[targetCell.dataset.index] - width, randomBoard[targetCell.dataset.index] - width + 1]
+    } else {
+      neighbourHoodArray = [randomBoard[targetCell.dataset.index] + width - 1, randomBoard[targetCell.dataset.index] + width, randomBoard[targetCell.dataset.index] - width, randomBoard[targetCell.dataset.index] - width - 1, randomBoard[targetCell.dataset.index] + 1, randomBoard[targetCell.dataset.index] - 1, randomBoard[targetCell.dataset.index] + width + 1, randomBoard[targetCell.dataset.index] + width, randomBoard[targetCell.dataset.index] - width + 1]
+    }
+    return neighbourHoodArray
+  }
 
   // ? Variables
 
@@ -243,7 +282,7 @@ function init() {
   function startGame() {
     resetTimer()
     clearBoard()
-    simpleStart()
+    createNewBoard()
     flagCounter()
     startTimer()
   }
@@ -259,9 +298,6 @@ function init() {
   function clearBoard() {
     randomBoard.splice(0, randomBoard.length)
     gridDiv.innerHTML = ''
-    // while (gridDiv.firstChild) {
-    //   gridDiv.removeChild(gridDiv.firstChild)
-    // }
   }
 
 
@@ -288,43 +324,6 @@ function init() {
     flagCounterScreen.innerText -= 1
   }
 
-  function leftClickGame(event) {
-    console.log(event.target)
-    //check game over first to disable click on grid function
-    if (event.target.classList.contains('safe')) {
-      // if statement to push to gameOverwin?
-      event.target.classList.remove('safe')
-      event.target.classList.add('cleared')
-      event.target.innerText = event.target.dataset.nearbyBombs// revealing number of scaryNeighbours
-    } else if (event.target.classList.contains('cleared')) {
-      return
-    } else if (event.target.classList.contains('flag')) {
-      //if statement to GameOverWin?
-      return
-    } else if (event.target.classList.contains('boom')) {
-      event.target.classList.remove('boom')
-      event.target.classList.add('killer')
-      gameOverLose()
-    } else if (event.target.classList.contains('empty')) {
-      // Call Recursive function
-      //zeroNumberHunt(event)
-    }
-    // If contains class 'safe' remove 'safe' class add 'cleared' class - change styling and push nearbyBombs dataset to innerText, return
-    // If contains cleared class, return
-    // If contains flag return
-    // If contains bomb GameOverLose function
-    // If contains 0, recursive function to check neighbours for nearbyBombs dataset values > 0, if = 0 then check their neighbours until > 0 then change class from 'safe' to 'cleared' and push nearbyBombs dataset to innerText
-  }
-
-  //function zeroNumberHunt(event) {
-  // Run result back into leftclickfunction to close loop as will return the correct outcome (i.e. change class and display number or display nothing)
-  //if (cell contains 'safe' class) {
-  //  change to cleared value 
-  // push dataset.nearbyBombs to innerText
-  //}
-  // check dataset values in eight directions if zero in one direction check dataset values in eight directions(! - send it backwards?)
-  //}
-
   function gameOverLose() {
     for (let i = 0; i < randomBoard.length; i++) {
       if (randomBoard[i].classList.contains('boom')) {
@@ -333,6 +332,10 @@ function init() {
       }
     }
   }
+
+
+
+
 
   // * Function: create board will run when start button clicked: fill with required amount of bomb/'empty' squares (arrays to store values? Combined? ) - auto board is 'Easy' version - define borders of square to prevent wrapping
   // * Function: Assign all non-bomb cells their number value based upon neighbouring bombs, loops? for each direction (8 total corners and sides) then assigning and storing data value (if statements? add to value for each bomb)
@@ -372,7 +375,7 @@ function init() {
   mediumButton.addEventListener('click', selectBoardDifficulty)
   hardButton.addEventListener('click', selectBoardDifficulty)
   // customButton.addEventListener('click')
-  gridDiv.addEventListener('click', leftClickGame)
+  // gridDiv.addEventListener('click', leftClickGame)
   gridDiv.addEventListener('contextmenu', function (event) {
     plantFlag(event)
     event.preventDefault()

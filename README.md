@@ -22,3 +22,7 @@ I then created a simple bomb /flag counter which was set to the bomb amount and 
 
 
 Challenge - disable right click menu pop-up (on game), disable right-click on game before game init
+
+Worked through bugs with checking neighbour bombs and clearing the array properly for each new board
+
+The recurisve function took a while to get through but after taking a new approach 

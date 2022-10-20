@@ -46,7 +46,6 @@ main {
 }
 
 .menu div {
-  border: 2px solid black;
   padding: 10px;
 }
 
@@ -55,10 +54,14 @@ main {
 .menuContents {
   display: flex;
   margin-top: 20px;
+  background-color: rgb(122, 120, 120);
+  /*background-image: url(../Images/rivet\ metal.jpeg);*/
 }
 
 .menuHighScore {
   flex: 2;
+  font-size: 0.4rem;
+  max-height: 100px;
 }
 
 .customControlInterface {
@@ -88,14 +91,14 @@ main {
 button {
   width: 60px;
   height: 30px;
-  background-color: black;
+  background-color: red;
   color: white;
   border: 1px solid grey;
   border-radius: 5px;
 }
 
 button:hover {
-  background-color: white;
+  background-color: green;
   color: black;
 }
 

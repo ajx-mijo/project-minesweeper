@@ -11,8 +11,11 @@ function init() {
   const menuDiv = document.createElement('div')
   const menuContents = document.createElement('div')
   const menuHighScoreDisplayDiv = document.createElement('div')
+  const easyHighScoreDiv = document.createElement('div')
+  const mediumHighScoreDiv = document.createElement('div')
+  const hardHighScoreDiv = document.createElement('div')
   const menuCustomControlsDiv = document.createElement('div')
-  const customButton = document.createElement('button')
+  // const customButton = document.createElement('button')
   const easyButton = document.createElement('button')
   const mediumButton = document.createElement('button')
   const hardButton = document.createElement('button')
@@ -37,10 +40,13 @@ function init() {
   menuDiv.classList.add('menu')
   menuContents.classList.add('menuContents')
   menuHighScoreDisplayDiv.classList.add('menuHighScore')
+  easyHighScoreDiv.classList.add('easyHighScore')
+  mediumHighScoreDiv.classList.add('mediumHighScore')
+  hardHighScoreDiv.classList.add('hardHighScore')
   menuCustomControlsDiv.classList.add('customControlInterface')
-  customButton.classList.add('createButton')
-  customButton.innerText = 'Custom'
-  customButton.id = 'customGameStartButton'
+  // customButton.classList.add('createButton')
+  // customButton.innerText = 'Custom'
+  // customButton.id = 'customGameStartButton'
   easyButton.classList.add('createButton')
   easyButton.innerText = 'Easy'
   easyButton.id = 'easyGameStartButton'
@@ -71,7 +77,8 @@ function init() {
   main.append(menuDiv, gameDisplayDiv)
   menuDiv.appendChild(menuContents)
   menuContents.append(menuHighScoreDisplayDiv, menuCustomControlsDiv, menuStartResetButtonsDiv)
-  menuCustomControlsDiv.append(customButton, easyButton, mediumButton, hardButton)
+  menuHighScoreDisplayDiv.append(easyHighScoreDiv, mediumHighScoreDiv, hardHighScoreDiv)
+  menuCustomControlsDiv.append(easyButton, mediumButton, hardButton)
   menuStartResetButtonsDiv.append(startButtonDiv, resetButtonDiv)
   resetButtonDiv.appendChild(resetButton)
   startButtonDiv.appendChild(startButton)
@@ -239,7 +246,7 @@ function init() {
     // If contains 0, recursive function to check neighbours for nearbyBombs dataset values > 0, if = 0 then check their neighbours until > 0 then change class from 'safe' to 'cleared' and push nearbyBombs dataset to innerText
   }
 
-  // // //? Recursive function 
+  //? Recursive function 
   function checkNeighbours(targetCell, cellIndex) {
     const neighbours = findAllNeighbours(targetCell)// should be an array so can forEach
     neighbours.forEach(neighbour => {
@@ -276,6 +283,9 @@ function init() {
   timerScreen.innerText = 0
   let sec = 0
   const flagCounterScreen = document.querySelector('.flagCounter')
+  const easyHighScoreDisplay = document.querySelector('.easyHighScore')
+  const mediumHighScoreDisplay = document.querySelector('.mediumHighScore')
+  const hardHighScoreDisplay = document.querySelector('.hardHighScore')
 
 
   // ? Executions
@@ -315,6 +325,12 @@ function init() {
     timerScreen.innerText = 0
   }
 
+  function highScoreDisplay() {
+    easyHighScoreDisplay.innerHTML = 'High-Score Easy:'
+    mediumHighScoreDisplay.innerHTML = 'High-Score Medium:'
+    hardHighScoreDisplay.innerHTML = 'High-Score Hard:'
+  }
+  highScoreDisplay()
   function flagCounter() {
     flagCounterScreen.innerHTML = bombsNumber
   }

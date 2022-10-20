@@ -208,7 +208,7 @@ function init() {
   }
 
   function leftClickGame(event) {
-    console.log(event.target)
+    // console.log(event.target)
     const targetCell = event.target
     //check game over first to disable click on grid function
     const cellIndex = targetCell.dataset.index
@@ -229,8 +229,8 @@ function init() {
       gameOverLose()
     } else {
       // Call Recursive function
-      checkNeighbours(targetCell, cellIndex)
       targetCell.classList.add('cleared')
+      // checkNeighbours(targetCell, cellIndex)
     }
     // If contains class 'safe' remove 'safe' class add 'cleared' class - change styling and push nearbyBombs dataset to innerText, return
     // If contains cleared class, return
@@ -239,7 +239,7 @@ function init() {
     // If contains 0, recursive function to check neighbours for nearbyBombs dataset values > 0, if = 0 then check their neighbours until > 0 then change class from 'safe' to 'cleared' and push nearbyBombs dataset to innerText
   }
 
-  // //? Recursive function 
+  // // //? Recursive function 
   function checkNeighbours(targetCell, cellIndex) {
     const neighbours = findAllNeighbours(targetCell)// should be an array so can forEach
     neighbours.forEach(neighbour => {
@@ -316,13 +316,22 @@ function init() {
   }
 
   function flagCounter() {
-    flagCounterScreen.innerText = bombsNumber
+    flagCounterScreen.innerHTML = bombsNumber
   }
 
   function plantFlag(event) {
-    event.target.setAttribute('id', 'flag')
-    flagCounterScreen.innerText -= 1
+    if (event.target.id === 'flag') {
+      event.target.removeAttribute('id', 'flag')
+      bombsNumber++
+    } else {
+      event.target.setAttribute('id', 'flag')
+      event.target.classList.add('clickDisabled')
+      bombsNumber--
+    }
+    flagCounter()
   }
+
+
 
   function gameOverLose() {
     for (let i = 0; i < randomBoard.length; i++) {
@@ -374,6 +383,12 @@ function init() {
   easyButton.addEventListener('click', selectBoardDifficulty)
   mediumButton.addEventListener('click', selectBoardDifficulty)
   hardButton.addEventListener('click', selectBoardDifficulty)
+  gridDiv.addEventListener('click', (event) => {
+    if (event.target.classList.contains('clickDisabled')) {
+      event.stopPropagation()
+    }
+  }, true)
+  // attach in capturing phase
   // customButton.addEventListener('click')
   // gridDiv.addEventListener('click', leftClickGame)
   gridDiv.addEventListener('contextmenu', function (event) {

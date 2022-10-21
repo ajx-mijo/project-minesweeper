@@ -42,7 +42,7 @@ function init() {
   header.innerText = 'Minesweeper'
   menuDiv.classList.add('menu')
   menuContents.classList.add('menuContents')
-  menuHighScoreDisplayDiv.classList.add('menuHighScore')
+  // menuHighScoreDisplayDiv.classList.add('menuHighScore')
   easyHighScoreDiv.classList.add('easyHighScore')
   mediumHighScoreDiv.classList.add('mediumHighScore')
   hardHighScoreDiv.classList.add('hardHighScore')
@@ -79,8 +79,8 @@ function init() {
   body.appendChild(main)
   main.append(menuDiv, gameDisplayDiv)
   menuDiv.appendChild(menuContents)
-  menuContents.append(menuHighScoreDisplayDiv, menuCustomControlsDiv, menuStartResetButtonsDiv)
-  menuHighScoreDisplayDiv.append(easyHighScoreDiv, mediumHighScoreDiv, hardHighScoreDiv)
+  menuContents.append(menuCustomControlsDiv, menuStartResetButtonsDiv)
+  // menuHighScoreDisplayDiv.append(easyHighScoreDiv, mediumHighScoreDiv, hardHighScoreDiv)
   easyHighScoreDiv.appendChild(easyScore)
   mediumHighScoreDiv.appendChild(mediumScore)
   hardHighScoreDiv.appendChild(hardScore)
@@ -119,8 +119,8 @@ function init() {
   let randomBoard = []
 
   //High Score Storage
-  const numberOfHighScores = 10
-  const highScoresArray = 'highScores'
+  // const numberOfHighScores = 10
+  // const highScoresArray = 'highScores'
 
 
   // ? Character Variables
@@ -213,13 +213,14 @@ function init() {
           scaryNeighbours++
         }
         randomBoard[i].dataset.nearbyBombs = scaryNeighbours
+        console.log(randomBoard[i])
       }
-      for (let i = 0; i < randomBoard.length; i++) {
-        if (randomBoard[i].dataset.nearbyBombs === '0') {
-          randomBoard[i].classList.remove('safe')
-          randomBoard[i].classList.add('empty')
-        }
-      }
+      // for (let i = 0; i < randomBoard.length; i++) {
+      //   if (randomBoard[i].dataset.nearbyBombs === '0') {
+      //     randomBoard[i].classList.remove('safe')
+      //     randomBoard[i].classList.add('empty')
+      //   }
+      // }
     }
   }
 
@@ -229,10 +230,15 @@ function init() {
     //check game over first to disable click on grid function
     const cellIndex = targetCell.dataset.index
     if (targetCell.classList.contains('safe')) {
-      // if statement to push to gameOverwin?
       targetCell.classList.remove('safe')
       targetCell.classList.add('cleared')
       targetCell.innerText = targetCell.dataset.nearbyBombs
+      checkNeighbours(targetCell, cellIndex)
+      const checkArray = randomBoard.filter(cell => cell.classList.contains('safe'))
+      // console.log(checkArray)
+      if (checkArray.length === 0) {
+        gameOverWin()
+      }
     } else if (targetCell.classList.contains('cleared')) {
       return
     } else if (targetCell.id === 'flag') {
@@ -241,11 +247,6 @@ function init() {
       targetCell.classList.remove('boom')
       targetCell.classList.add('killer')
       gameOverLose()
-    } else {
-      // Call Recursive function
-      targetCell.classList.add('cleared')
-      targetCell.classList.remove('empty')
-      checkNeighbours(targetCell, cellIndex)
     }
     // If contains class 'safe' remove 'safe' class add 'cleared' class - change styling and push nearbyBombs dataset to innerText, return
     // If contains cleared class, return
@@ -259,15 +260,20 @@ function init() {
     let targetCellIndex = randomBoard[cellIndex]
     console.log(targetCellIndex)
     const neighbours = findAllNeighbours(width, targetCellIndex)// should be an array so can forEach
+    // console.log(neighbours)
     neighbours.forEach(neighbour => {
-      if (neighbour.classList.contains('empty')) {
-        neighbour.classList.remove('empty')
+      if (parseInt(neighbour.dataset.nearbyBombs) === 0 && neighbour.classList.contains('safe')) {
+        neighbour.classList.remove('safe')
         neighbour.classList.add('cleared')
         checkNeighbours(neighbour, neighbour.dataset.index)
-      } else if (neighbour.classList.contains('safe')) {
-        targetCell.classList.remove('safe')
-        targetCell.classList.add('cleared')
-        targetCell.innerText = targetCell.dataset.nearbyBombs
+        return
+      } else if (neighbour.classList.contains('safe') && parseInt(neighbour.dataset.nearbyBombs) > 0) {
+        neighbour.classList.remove('safe')
+        neighbour.classList.add('cleared')
+        neighbour.innerText = neighbour.dataset.nearbyBombs
+        // checkNeighbours(neighbour, neighbour.dataset.index)
+        return
+      } else if (neighbour.classList.contains('cleared')) {
         return
       }
     })
@@ -275,12 +281,13 @@ function init() {
 
   function findAllNeighbours(width, targetCellIndex) {
     console.log(targetCellIndex)
-    console.log(targetCellIndex.dataset.index)
-    console.log(width)
+    // console.log(targetCellIndex.dataset.index)
+    // console.log(width)
     let index = parseInt(targetCellIndex.dataset.index)
-    console.log(index)
+    // console.log(index)
     let neighbourHoodArray = []
-    if ((index - width - 1) % width) {
+    if (index % width === width - 1) {
+      console.log('Right')
       if (randomBoard[index + width]) {
         neighbourHoodArray.push(randomBoard[index + width])
       }
@@ -297,6 +304,7 @@ function init() {
         neighbourHoodArray.push(randomBoard[index - 1])
       }
     } else if (!(index % width)) {
+      console.log('Left')
       if (randomBoard[index + width]) {
         neighbourHoodArray.push(randomBoard[index + width])
       }
@@ -313,6 +321,7 @@ function init() {
         neighbourHoodArray.push(randomBoard[index - width + 1])
       }
     } else {
+      console.log('Middle')
       if (randomBoard[index + width - 1]) {
         neighbourHoodArray.push(randomBoard[index + width - 1])
       }
@@ -338,7 +347,7 @@ function init() {
         neighbourHoodArray.push(randomBoard[index - width + 1])
       }
     }
-    console.log(neighbourHoodArray)
+    // console.log(neighbourHoodArray)
     return neighbourHoodArray
   }
 
@@ -348,9 +357,9 @@ function init() {
   timerScreen.innerText = 0
   let sec = 0
   const flagCounterScreen = document.querySelector('.flagCounter')
-  const easyHighScoreCat = document.querySelector('.easyHighScore')
-  const mediumHighScoreCat = document.querySelector('.mediumHighScore')
-  const hardHighScoreCat = document.querySelector('.hardHighScore')
+  // const easyHighScoreCat = document.querySelector('.easyHighScore')
+  // const mediumHighScoreCat = document.querySelector('.mediumHighScore')
+  // const hardHighScoreCat = document.querySelector('.hardHighScore')
 
 
   // ? Executions
@@ -392,12 +401,12 @@ function init() {
     timerScreen.innerText = 0
   }
 
-  function highScoreDisplay() {
-    easyHighScoreCat.innerHTML = 'High-Score Easy:'
-    mediumHighScoreCat.innerHTML = 'High-Score Medium:'
-    hardHighScoreCat.innerHTML = 'High-Score Hard:'
-  }
-  highScoreDisplay()
+  // function highScoreDisplay() {
+  //   easyHighScoreCat.innerHTML = 'High-Score Easy:'
+  //   mediumHighScoreCat.innerHTML = 'High-Score Medium:'
+  //   hardHighScoreCat.innerHTML = 'High-Score Hard:'
+  // }
+  // highScoreDisplay()
   function flagCounter() {
     flagCounterScreen.innerHTML = bombsNumber
   }
@@ -423,38 +432,39 @@ function init() {
     }
   }
 
-  function checkHighScore(score) {
-    const highScores = JSON.parse(localStorage.getItem(highScoresArray)) ?? []
-    const lowestScore = highScores[numberOfHighScores - 1]?.score ?? 0
+  // function checkHighScore(score) {
+  //   const highScores = JSON.parse(localStorage.getItem(highScoresArray)) ?? []
+  //   const lowestScore = highScores[numberOfHighScores - 1]?.score ?? 0
 
-    if (score > lowestScore) {
-      saveHighScore(score, highScores)
-      showHighScores()
-    }
-  }
+  //   if (score > lowestScore) {
+  //     saveHighScore(score, highScores)
+  //     showHighScores()
+  //   }
+  // }
 
-  function saveHighScore(score, highScores) {
-    const name = prompt('You got a highscore! Enter name:')
-    const newScore = { score, name }
+  // function saveHighScore(score, highScores) {
+  //   const name = prompt('You got a highscore! Enter name:')
+  //   const newScore = { score, name }
 
-    highScores.push(newScore)
+  //   highScores.push(newScore)
 
-    localStorage.setItem(numberOfHighScores, JSON.stringify(highScores))
-  }
+  //   localStorage.setItem(numberOfHighScores, JSON.stringify(highScores))
+  // }
 
-  function showHighScores() {
-    const highScores = JSON.parse(localStorage.getItem(highScoresArray)) ?? []
-    const highScoreList = document.querySelector('.easyHighScore')
+  // function showHighScores() {
+  //   const highScores = JSON.parse(localStorage.getItem(highScoresArray)) ?? []
+  //   const highScoreList = document.querySelector('.easyHighScore')
 
-    //highScoreList.innerHTML = 
-  }
+  //   //highScoreList.innerHTML = 
+  // }
 
 
   function gameOverWin() {
     clearInterval(timerScreen)
-    let score = parseFloat(sec)
-    console.log(score)
-    checkHighScore(score)
+    alert('You Won!')
+    // let score = parseFloat(sec)
+    // console.log(score)
+    // checkHighScore(score)
     // Change all safe cells - cleared - filter and then change
   }
 

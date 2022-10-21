@@ -71,6 +71,10 @@ main {
   justify-content: space-around;
   display: flex;
   align-items: center;
+  border: 2px solid black;
+  background-color: rgb(153, 151, 151);
+  border-radius: 5px;
+  margin-right: 10px;
 }
 
 .highScoreDisplay {
@@ -93,6 +97,9 @@ main {
   display: flex;
   justify-content: space-around;
   flex: 1;
+  border: 2px solid black;
+  background-color: rgb(153, 151, 151);
+  border-radius: 5px;
 }
 
 .startResetButton {

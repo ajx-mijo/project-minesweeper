@@ -2,7 +2,6 @@ function init() {
   // ? Create grid
 
   // DOM Elements
-
   const body = document.querySelector('body')
   const header = document.createElement('header')
   const main = document.createElement('main')
@@ -69,7 +68,7 @@ function init() {
   flagCounterDiv.classList.add('flagCounter')
   timerDiv.classList.add('timer')
 
-  //DOM Element Structure
+  // DOM Element Structure
   body.appendChild(header)
   body.appendChild(main)
   main.append(menuDiv, gameDisplayDiv)
@@ -118,7 +117,7 @@ function init() {
   function selectBoardDifficulty(event) {
     resetTimer()
     clearBoard()
-    if (event.target.id === 'easyGameStartButton') {
+    if (event.target.id === 'easyGameStartButton' || event.target.id === 'startButton' || event.target.id === 'resetButton') {
       gridDiv.setAttribute('id', 'easy')
       height = setBoard.easyHeight
       width = setBoard.easyWidth
@@ -257,13 +256,13 @@ function init() {
   }
 
 
-  // ? Recursive function to reveal neighbours of empty squares
+  // ? Recursive function to reveal neighbours of empty squares 
+  // ! TODO: Needs to take into account dataset.nearbyBombs to determine extent of uncovering
 
   function checkNeighbours(targetCell, cellIndex) {
     const targetCellIndex = randomBoard[cellIndex]
     console.log(targetCellIndex)
-    const neighbours = findAllNeighbours(width, targetCellIndex)// should be an array so can forEach
-    // console.log(neighbours)
+    const neighbours = findAllNeighbours(width, targetCellIndex)
     neighbours.forEach(neighbour => {
       if (parseInt(neighbour.dataset.nearbyBombs) === 0 && neighbour.classList.contains('safe')) {
         neighbour.classList.remove('safe')
@@ -274,7 +273,6 @@ function init() {
         neighbour.classList.remove('safe')
         neighbour.classList.add('cleared')
         neighbour.innerText = neighbour.dataset.nearbyBombs
-        // checkNeighbours(neighbour, neighbour.dataset.index)
         return
       } else if (neighbour.classList.contains('cleared')) {
         return
@@ -362,22 +360,8 @@ function init() {
 
 
   // ? Game Start/Reset/Timer Functions
+  // ! Flag Counter not resetting on Initiate new version of current game difficulty
 
-  function startGame() {
-    resetTimer()
-    clearBoard()
-    createNewBoard()
-    flagCounter()
-    startTimer()
-  }
-
-  function resetBoard() {
-    resetTimer()
-    clearBoard()
-    createNewBoard()
-    flagCounter()
-    startTimer()
-  }
 
   function clearBoard() {
     randomBoard.splice(0, randomBoard.length)
@@ -405,15 +389,24 @@ function init() {
 
   // ? Gameover functions
 
-  // function clearRemainingCells() {
-  //   const clearRemainingArray = randomBoard.filter(cell => cell.classList.contains('safe'))
-  //   clearRemainingArray.forEach(cell => {cell.classList.add('cleared') && cell.innerText = cell.dataset.nearbyBombs}
-  // }
+  function clearRemainingCells() {
+    const clearRemainingArray = randomBoard.filter(cell => cell.classList.contains('safe'))
+    clearRemainingArray.forEach(cell => {
+      cell.classList.add('cleared')
+      if (parseInt(cell.dataset.nearbyBombs) > 0) {
+        cell.innerText = cell.dataset.nearbyBombs
+      }
+    })
+  }
   function gameOverWin() {
     clearRemainingCells()
     clearInterval(timerScreen)
-    setTimeout(alert('You Won!'), 2000)
-    // Change all safe cells - cleared - filter and then change
+    alertWin()
+    randomBoard.forEach(cell => cell.classList.add('clickDisabled'))
+  }
+
+  function alertWin() {
+    alert('Winner, winner, chicken dinner!')
   }
 
   function gameOverLose() {
@@ -424,11 +417,12 @@ function init() {
         randomBoard[i].classList.add('dead')
       }
     }
+    randomBoard.forEach(cell => cell.classList.add('clickDisabled'))
   }
 
   // ? Event Listeners
-  startButton.addEventListener('click', startGame)
-  resetButton.addEventListener('click', resetBoard)
+  startButton.addEventListener('click', selectBoardDifficulty)
+  resetButton.addEventListener('click', selectBoardDifficulty)
   easyButton.addEventListener('click', selectBoardDifficulty)
   mediumButton.addEventListener('click', selectBoardDifficulty)
   hardButton.addEventListener('click', selectBoardDifficulty)

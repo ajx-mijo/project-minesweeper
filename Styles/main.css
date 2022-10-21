@@ -49,12 +49,6 @@ main {
   background-color: rgb(122, 120, 120);
 }
 
-.menuHighScore {
-  flex: 2;
-  font-size: 0.4rem;
-  max-height: 100px;
-}
-
 .customControlInterface {
   flex: 3;
   justify-content: space-around;
@@ -143,6 +137,10 @@ button:hover {
   font-size: 0.5rem;
   color: greenyellow;
   font-family: 'Orbitron'
+}
+
+.gameCounters div {
+  padding-top: 8px;
 }
 
 .gridContainer {

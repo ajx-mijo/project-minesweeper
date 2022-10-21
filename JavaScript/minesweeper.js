@@ -244,7 +244,8 @@ function init() {
     } else {
       // Call Recursive function
       targetCell.classList.add('cleared')
-      //checkNeighbours(targetCell, cellIndex)
+      targetCell.classList.remove('empty')
+      checkNeighbours(targetCell, cellIndex)
     }
     // If contains class 'safe' remove 'safe' class add 'cleared' class - change styling and push nearbyBombs dataset to innerText, return
     // If contains cleared class, return
@@ -256,6 +257,7 @@ function init() {
   //? Recursive function 
   function checkNeighbours(targetCell, cellIndex) {
     let targetCellIndex = randomBoard[cellIndex]
+    console.log(targetCellIndex)
     const neighbours = findAllNeighbours(width, targetCellIndex)// should be an array so can forEach
     neighbours.forEach(neighbour => {
       if (neighbour.classList.contains('empty')) {
@@ -275,14 +277,66 @@ function init() {
     console.log(targetCellIndex)
     console.log(targetCellIndex.dataset.index)
     console.log(width)
-    let index = targetCellIndex.dataset.index
-    let neighbourHoodArray
-    if (index % width === width - 1) {
-      neighbourHoodArray = [randomBoard[index] + width, randomBoard[index] - width, randomBoard[index] + width - 1, randomBoard[index] - width - 1, randomBoard[index] - 1]
-    } else if (index % width === 0) {
-      neighbourHoodArray = [randomBoard[index] + width, randomBoard[index] + width + 1, randomBoard[index] + 1, randomBoard[index] - width, randomBoard[index] - width + 1]
+    let index = parseInt(targetCellIndex.dataset.index)
+    console.log(index)
+    let neighbourHoodArray = []
+    if ((index - width - 1) % width) {
+      if (randomBoard[index + width]) {
+        neighbourHoodArray.push(randomBoard[index + width])
+      }
+      if (randomBoard[index - width]) {
+        neighbourHoodArray.push(randomBoard[index - width])
+      }
+      if (randomBoard[index + width - 1]) {
+        neighbourHoodArray.push(randomBoard[index + width - 1])
+      }
+      if (randomBoard[index - width - 1]) {
+        neighbourHoodArray.push(randomBoard[index - width - 1])
+      }
+      if (randomBoard[index - 1]) {
+        neighbourHoodArray.push(randomBoard[index - 1])
+      }
+    } else if (!(index % width)) {
+      if (randomBoard[index + width]) {
+        neighbourHoodArray.push(randomBoard[index + width])
+      }
+      if (randomBoard[index + width + 1]) {
+        neighbourHoodArray.push(randomBoard[index + width + 1])
+      }
+      if (randomBoard[index + 1]) {
+        neighbourHoodArray.push(randomBoard[index + 1])
+      }
+      if (randomBoard[index - width]) {
+        neighbourHoodArray.push(randomBoard[index - width])
+      }
+      if (randomBoard[index - width + 1]) {
+        neighbourHoodArray.push(randomBoard[index - width + 1])
+      }
     } else {
-      neighbourHoodArray = [randomBoard[index] + width - 1, randomBoard[index] + width, randomBoard[index] - width, randomBoard[index] - width - 1, randomBoard[index] + 1, randomBoard[index] - 1, randomBoard[index] + width + 1, randomBoard[index] + width, randomBoard[index] - width + 1]
+      if (randomBoard[index + width - 1]) {
+        neighbourHoodArray.push(randomBoard[index + width - 1])
+      }
+      if (randomBoard[index + width]) {
+        neighbourHoodArray.push(randomBoard[index + width])
+      }
+      if (randomBoard[index - width]) {
+        neighbourHoodArray.push(randomBoard[index - width])
+      }
+      if (randomBoard[index - width - 1]) {
+        neighbourHoodArray.push(randomBoard[index - width - 1])
+      }
+      if (randomBoard[index + 1]) {
+        neighbourHoodArray.push(randomBoard[index + 1])
+      }
+      if (randomBoard[index - 1]) {
+        neighbourHoodArray.push(randomBoard[index - 1])
+      }
+      if (randomBoard[index + width + 1]) {
+        neighbourHoodArray.push(randomBoard[index + width + 1])
+      }
+      if (randomBoard[index - width + 1]) {
+        neighbourHoodArray.push(randomBoard[index - width + 1])
+      }
     }
     console.log(neighbourHoodArray)
     return neighbourHoodArray

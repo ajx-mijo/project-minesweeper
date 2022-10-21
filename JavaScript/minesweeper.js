@@ -226,9 +226,7 @@ function init() {
       targetCell.innerText = targetCell.dataset.nearbyBombs// revealing number of scaryNeighbours
     } else if (targetCell.classList.contains('cleared')) {
       return
-    } else if (targetCell.classList.contains('flag')) {
-      //if statement to GameOverWin?
-      //check progress each time
+    } else if (targetCell.id === 'flag') {
       return
     } else if (targetCell.classList.contains('boom')) {
       targetCell.classList.remove('boom')
@@ -237,7 +235,7 @@ function init() {
     } else {
       // Call Recursive function
       targetCell.classList.add('cleared')
-      // checkNeighbours(targetCell, cellIndex)
+      //checkNeighbours(targetCell, cellIndex)
     }
     // If contains class 'safe' remove 'safe' class add 'cleared' class - change styling and push nearbyBombs dataset to innerText, return
     // If contains cleared class, return
@@ -248,32 +246,36 @@ function init() {
 
   //? Recursive function 
   function checkNeighbours(targetCell, cellIndex) {
-    const neighbours = findAllNeighbours(targetCell)// should be an array so can forEach
+    let targetCellIndex = randomBoard[cellIndex]
+    const neighbours = findAllNeighbours(width, targetCellIndex)// should be an array so can forEach
     neighbours.forEach(neighbour => {
       if (neighbour.classList.contains('empty')) {
         neighbour.classList.remove('empty')
         neighbour.classList.add('cleared')
-        checkNeighbours(neighbour)
-      } else if (neighbour.contains.class('bomb')) {
-        return
+        checkNeighbours(neighbour, neighbour.dataset.index)
       } else if (neighbour.classList.contains('safe')) {
         targetCell.classList.remove('safe')
         targetCell.classList.add('cleared')
         targetCell.innerText = targetCell.dataset.nearbyBombs
+        return
       }
     })
   }
 
-  function findAllNeighbours(targetCell) {
-    console.log(targetCell)
+  function findAllNeighbours(width, targetCellIndex) {
+    console.log(targetCellIndex)
+    console.log(targetCellIndex.dataset.index)
+    console.log(width)
+    let index = targetCellIndex.dataset.index
     let neighbourHoodArray
-    if (randomBoard[targetCell.dataset.index] % width === width - 1) {
-      neighbourHoodArray = [randomBoard[targetCell.dataset.index] + width, randomBoard[targetCell.dataset.index] - width, randomBoard[targetCell.dataset.index] + width - 1, randomBoard[targetCell.dataset.index] - width - 1, randomBoard[targetCell.dataset.index] - 1]
-    } else if (randomBoard[targetCell.dataset.index] % width === 0) {
-      neighbourHoodArray = [randomBoard[targetCell.dataset.index] + width, randomBoard[targetCell.dataset.index] + width + 1, randomBoard[targetCell.dataset.index] + 1, randomBoard[targetCell.dataset.index] - width, randomBoard[targetCell.dataset.index] - width + 1]
+    if (index % width === width - 1) {
+      neighbourHoodArray = [randomBoard[index] + width, randomBoard[index] - width, randomBoard[index] + width - 1, randomBoard[index] - width - 1, randomBoard[index] - 1]
+    } else if (index % width === 0) {
+      neighbourHoodArray = [randomBoard[index] + width, randomBoard[index] + width + 1, randomBoard[index] + 1, randomBoard[index] - width, randomBoard[index] - width + 1]
     } else {
-      neighbourHoodArray = [randomBoard[targetCell.dataset.index] + width - 1, randomBoard[targetCell.dataset.index] + width, randomBoard[targetCell.dataset.index] - width, randomBoard[targetCell.dataset.index] - width - 1, randomBoard[targetCell.dataset.index] + 1, randomBoard[targetCell.dataset.index] - 1, randomBoard[targetCell.dataset.index] + width + 1, randomBoard[targetCell.dataset.index] + width, randomBoard[targetCell.dataset.index] - width + 1]
+      neighbourHoodArray = [randomBoard[index] + width - 1, randomBoard[index] + width, randomBoard[index] - width, randomBoard[index] - width - 1, randomBoard[index] + 1, randomBoard[index] - 1, randomBoard[index] + width + 1, randomBoard[index] + width, randomBoard[index] - width + 1]
     }
+    console.log(neighbourHoodArray)
     return neighbourHoodArray
   }
 
@@ -319,6 +321,8 @@ function init() {
     // if gameover pause startcountdown// global let gameOver = true/false statement then setTimeout
   }
 
+
+
   function resetTimer() {
     clearInterval(timerScreen)
     sec = 0
@@ -331,6 +335,7 @@ function init() {
     hardHighScoreDisplay.innerHTML = 'High-Score Hard:'
   }
   highScoreDisplay()
+
   function flagCounter() {
     flagCounterScreen.innerHTML = bombsNumber
   }
@@ -345,11 +350,23 @@ function init() {
       bombsNumber--
     }
     flagCounter()
+    setTimeout(checkProgress(), 1000)
   }
 
+  function checkProgress() {
+    const checkBoard = randomBoard.filter(cell => cell.classList.contains('boom'))
+    if (checkBoard.every(item => item.id === 'flag')) {
+      setTimeout(gameOverWin(), 1000)
+    }
+  }
 
+  function gameOverWin() {
+    XMLDocument
+    alert('Win')
+  }
 
   function gameOverLose() {
+    clearInterval(timerScreen)
     for (let i = 0; i < randomBoard.length; i++) {
       if (randomBoard[i].classList.contains('boom')) {
         randomBoard[i].classList.remove('boom')

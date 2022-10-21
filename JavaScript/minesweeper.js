@@ -12,8 +12,11 @@ function init() {
   const menuContents = document.createElement('div')
   const menuHighScoreDisplayDiv = document.createElement('div')
   const easyHighScoreDiv = document.createElement('div')
+  const easyScore = document.createElement('div')
   const mediumHighScoreDiv = document.createElement('div')
+  const mediumScore = document.createElement('div')
   const hardHighScoreDiv = document.createElement('div')
+  const hardScore = document.createElement('div')
   const menuCustomControlsDiv = document.createElement('div')
   // const customButton = document.createElement('button')
   const easyButton = document.createElement('button')
@@ -78,6 +81,9 @@ function init() {
   menuDiv.appendChild(menuContents)
   menuContents.append(menuHighScoreDisplayDiv, menuCustomControlsDiv, menuStartResetButtonsDiv)
   menuHighScoreDisplayDiv.append(easyHighScoreDiv, mediumHighScoreDiv, hardHighScoreDiv)
+  easyHighScoreDiv.appendChild(easyScore)
+  mediumHighScoreDiv.appendChild(mediumScore)
+  hardHighScoreDiv.appendChild(hardScore)
   menuCustomControlsDiv.append(easyButton, mediumButton, hardButton)
   menuStartResetButtonsDiv.append(startButtonDiv, resetButtonDiv)
   resetButtonDiv.appendChild(resetButton)
@@ -112,6 +118,9 @@ function init() {
   // Random Board Array
   let randomBoard = []
 
+  //High Score Storage
+  const numberOfHighScores = 10
+  const highScoresArray = 'highScores'
 
 
   // ? Character Variables
@@ -223,7 +232,7 @@ function init() {
       // if statement to push to gameOverwin?
       targetCell.classList.remove('safe')
       targetCell.classList.add('cleared')
-      targetCell.innerText = targetCell.dataset.nearbyBombs// revealing number of scaryNeighbours
+      targetCell.innerText = targetCell.dataset.nearbyBombs
     } else if (targetCell.classList.contains('cleared')) {
       return
     } else if (targetCell.id === 'flag') {
@@ -285,9 +294,9 @@ function init() {
   timerScreen.innerText = 0
   let sec = 0
   const flagCounterScreen = document.querySelector('.flagCounter')
-  const easyHighScoreDisplay = document.querySelector('.easyHighScore')
-  const mediumHighScoreDisplay = document.querySelector('.mediumHighScore')
-  const hardHighScoreDisplay = document.querySelector('.hardHighScore')
+  const easyHighScoreCat = document.querySelector('.easyHighScore')
+  const mediumHighScoreCat = document.querySelector('.mediumHighScore')
+  const hardHighScoreCat = document.querySelector('.hardHighScore')
 
 
   // ? Executions
@@ -330,12 +339,11 @@ function init() {
   }
 
   function highScoreDisplay() {
-    easyHighScoreDisplay.innerHTML = 'High-Score Easy:'
-    mediumHighScoreDisplay.innerHTML = 'High-Score Medium:'
-    hardHighScoreDisplay.innerHTML = 'High-Score Hard:'
+    easyHighScoreCat.innerHTML = 'High-Score Easy:'
+    mediumHighScoreCat.innerHTML = 'High-Score Medium:'
+    hardHighScoreCat.innerHTML = 'High-Score Hard:'
   }
   highScoreDisplay()
-
   function flagCounter() {
     flagCounterScreen.innerHTML = bombsNumber
   }
@@ -343,6 +351,7 @@ function init() {
   function plantFlag(event) {
     if (event.target.id === 'flag') {
       event.target.removeAttribute('id', 'flag')
+      event.target.classList.remove('clickDisabled')
       bombsNumber++
     } else {
       event.target.setAttribute('id', 'flag')
@@ -360,9 +369,39 @@ function init() {
     }
   }
 
+  function checkHighScore(score) {
+    const highScores = JSON.parse(localStorage.getItem(highScoresArray)) ?? []
+    const lowestScore = highScores[numberOfHighScores - 1]?.score ?? 0
+
+    if (score > lowestScore) {
+      saveHighScore(score, highScores)
+      showHighScores()
+    }
+  }
+
+  function saveHighScore(score, highScores) {
+    const name = prompt('You got a highscore! Enter name:')
+    const newScore = { score, name }
+
+    highScores.push(newScore)
+
+    localStorage.setItem(numberOfHighScores, JSON.stringify(highScores))
+  }
+
+  function showHighScores() {
+    const highScores = JSON.parse(localStorage.getItem(highScoresArray)) ?? []
+    const highScoreList = document.querySelector('.easyHighScore')
+
+    //highScoreList.innerHTML = 
+  }
+
+
   function gameOverWin() {
-    XMLDocument
-    alert('Win')
+    clearInterval(timerScreen)
+    let score = parseFloat(sec)
+    console.log(score)
+    checkHighScore(score)
+    // Change all safe cells - cleared - filter and then change
   }
 
   function gameOverLose() {

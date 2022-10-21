@@ -43,6 +43,9 @@ main {
 .menu {
   display: block;
   flex: 2;
+  border: 2px solid black;
+  border-radius: 5px;
+  margin-top: 20px;
 }
 
 .menu div {
@@ -53,7 +56,6 @@ main {
 
 .menuContents {
   display: flex;
-  margin-top: 20px;
   background-color: rgb(122, 120, 120);
   /*background-image: url(../Images/rivet\ metal.jpeg);*/
 }
@@ -69,6 +71,17 @@ main {
   justify-content: space-around;
   display: flex;
   align-items: center;
+}
+
+.highScoreDisplay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250px;
+  padding: 10px 20px;
+  background: black;
+  text-align: center;
 }
 
 .customControls {
@@ -94,7 +107,7 @@ button {
   background-color: red;
   color: white;
   border: 1px solid grey;
-  border-radius: 5px;
+  border-radius: 500px;
 }
 
 button:hover {
@@ -200,10 +213,14 @@ border: 1px white inset */
 
 .killer {
   background-color: rgb(78, 18, 18);
+  background-image: url(../Images/bomb\ emoji.png);
+  background-size: cover;
 }
 
 .dead {
   background-color: red;
+  background-image: url(../Images/bomb\ emoji.png);
+  background-size: cover;
 }
 
 #flag::before {

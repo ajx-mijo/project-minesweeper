@@ -1,9 +1,3 @@
-/* MVP
-On full screen centred side-by-side divs one for the game another for the interactive menu/console - start/reset/high-score - title above
-Explosion on GameOver
-Timer and flag/bomb counter position above game evenly?
-*/
-
 /* Global Styles*/
 
 html {
@@ -17,9 +11,6 @@ body {
   align-items: center;
   font-family: 'Abril Fatface', sans-serif;
   font-size: 48px;
-  /* background-image: url(../Images/Stormysea.gif);
-  background-repeat: no-repeat;
-  background-size: 100%; */
 }
 
 main {
@@ -39,6 +30,7 @@ main {
   color: goldenrod;
 }
 
+
 /* Menu Console Styles*/
 .menu {
   display: block;
@@ -52,12 +44,9 @@ main {
   padding: 10px;
 }
 
-
-
 .menuContents {
   display: flex;
   background-color: rgb(122, 120, 120);
-  /*background-image: url(../Images/rivet\ metal.jpeg);*/
 }
 
 .menuHighScore {
@@ -75,17 +64,6 @@ main {
   background-color: rgb(153, 151, 151);
   border-radius: 5px;
   margin-right: 10px;
-}
-
-.highScoreDisplay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 250px;
-  padding: 10px 20px;
-  background: black;
-  text-align: center;
 }
 
 .customControls {
@@ -108,6 +86,7 @@ main {
   align-items: center;
 }
 
+/* Button Styles */
 button {
   width: 60px;
   height: 30px;
@@ -121,9 +100,6 @@ button:hover {
   background-color: green;
   color: black;
 }
-
-
-
 
 
 
@@ -156,9 +132,6 @@ button:hover {
   display: flex;
   flex-direction: column;
   width: max-content;
-  /* background-image: url(../Images/radar-gif.gif); 
-  background-repeat: no-repeat;
-  background-size: 100%;*/
 }
 
 .gameCounters {
@@ -171,7 +144,6 @@ button:hover {
   color: greenyellow;
   font-family: 'Orbitron'
 }
-
 
 .gridContainer {
   display: grid;
@@ -196,7 +168,6 @@ button:hover {
   grid-template: repeat(16, 1fr) / repeat(30, 1fr);
 }
 
-
 .gridContainer cell {
   width: 20px;
   height: 20px;
@@ -206,14 +177,6 @@ button:hover {
   text-align: center;
 }
 
-/* width: 20px;
-height: 20px;
-border-right: 1px solid rgb(123, 123, 123);
-border-bottom: 1px solid rgb(123, 123, 123);
-font-size: 0.8rem;
-text-align: center;
-background-color: rgb(189, 189, 189);
-border: 1px white inset */
 .cleared {
   background-color: white;
 }
@@ -233,14 +196,3 @@ border: 1px white inset */
 #flag::before {
   content: "\02693";
 }
-
-
-
-
-/* Target
-Above but with 'nautical/battleship theme and detailing' similar general design philosophy - fleshed out interactive console with custom game option/ high-score display for each difficulty with name (set Captain: XXX Time on Mission:XXX)
-Cells styled with shadowing/3d effect
-Sound design, nautical greetings, explosion, good job when you when (tally ho etc.)
-Responsive design to push and simplify interactive menu/console to E/M/H above game
-Green neon radar design - with red neon high/score custom etc or grey with white flicker type counters
-*/

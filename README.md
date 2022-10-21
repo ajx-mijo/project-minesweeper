@@ -25,4 +25,4 @@ Challenge - disable right click menu pop-up (on game), disable right-click on ga
 
 Worked through bugs with checking neighbour bombs and clearing the array properly for each new board
 
-The recurisve function took a while to get through but after taking a new approach - still not working - accessing the dom element isn't working
+The recurisve function took a while to get through but after more accurately targeting the DOM elements I needed to pass into the array and cleaning up my code I was able to get the recursion working - although it is OP and triggers on number cells as well.

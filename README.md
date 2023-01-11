@@ -7,7 +7,7 @@ Project-Minesweeper was my first solo project at General Assembly and was focuss
 
 ## Deployment link -  [Project Minesweeper](https://ajx-mijo.github.io/project-minesweeper/) 
 
-
+![Project Screenshot](https://res.cloudinary.com/doqbnr4p6/image/upload/v1673451846/readMe/image7_xejmze.png)
 
 
 ## Getting Started/Code Installation
